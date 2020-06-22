@@ -1,6 +1,7 @@
-package com.mageddo.jvmti.minecraft;
+package minecraft;
 
-import com.mageddo.jvmti.InstanceValue;
+import com.mageddo.ramspiderjava.InstanceValue;
+
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.lang3.Validate;

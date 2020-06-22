@@ -1,0 +1,22 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  jcenter()
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+
+  compileOnly 'org.projectlombok:lombok:1.18.12'
+  annotationProcessor 'org.projectlombok:lombok:1.18.12'
+  implementation("com.mageddo.ramspider:ram-spider-java:1.0.0")
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.12'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+}

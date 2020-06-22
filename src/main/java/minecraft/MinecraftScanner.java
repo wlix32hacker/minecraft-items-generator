@@ -1,17 +1,18 @@
-package com.mageddo.jvmti.minecraft;
+package minecraft;
 
-import com.mageddo.jvmti.ClassId;
-import com.mageddo.jvmti.ClassInstanceService;
-import com.mageddo.jvmti.FieldId;
-import com.mageddo.jvmti.InstanceValue;
-import com.mageddo.jvmti.classdelegate.InstanceId;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import com.mageddo.ramspiderjava.ClassId;
+import com.mageddo.ramspiderjava.ClassInstanceService;
+import com.mageddo.ramspiderjava.FieldId;
+import com.mageddo.ramspiderjava.InstanceValue;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Singleton
@@ -71,7 +72,7 @@ public class MinecraftScanner {
   void changeType(Item item, ItemType itemType) {
     this.classInstanceService.setFieldValue(
       item.getInstanceValue().getId(),
-      FieldId.of(item.getInstanceValue().getClassId(), "f"),
+      FieldId.of("f"),
       InstanceValue.of(itemType.getInstance().getId())
     );
   }
@@ -79,7 +80,7 @@ public class MinecraftScanner {
   void changeQuantity(Item item, int newQuantity) {
     this.classInstanceService.setFieldValue(
       item.getInstanceValue().getId(),
-      FieldId.of(item.getInstanceValue().getClassId(), "d"),
+      FieldId.of("d"),
       InstanceValue.of(newQuantity)
     );
   }
