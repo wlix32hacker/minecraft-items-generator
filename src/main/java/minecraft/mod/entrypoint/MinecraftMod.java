@@ -5,9 +5,12 @@ import com.mageddo.ramspiderjava.client.JavaRamSpider;
 import minecraft.mod.ItemType;
 import minecraft.mod.MinecraftScanner;
 
+import org.apache.commons.lang3.Validate;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -23,7 +26,18 @@ public class MinecraftMod {
   private JComboBox sourceItemTypeSlc;
   private JTextField sourceQtdIpt;
   private JButton findAndChangeButton;
+  private JTextField pid;
+  private JButton findProcessButton;
   private MinecraftScanner minecraftScanner;
+
+  public MinecraftMod() {
+    this.findAndChangeButton.addActionListener(e -> {
+      this.changeItemType();
+    });
+    this.findProcessButton.addActionListener(e -> {
+      this.selectMinecraftProcess(this.pid.getText());
+    });
+  }
 
   public static void main(String[] args) throws InterruptedException {
     new MinecraftMod().run();
@@ -32,7 +46,6 @@ public class MinecraftMod {
 
   public void run() {
     SwingUtilities.invokeLater(() -> {
-      System.out.println("running");
       JFrame frame = new JFrame("Minecraft Mod v1.0");
       frame.setLocationRelativeTo(null);
       frame.setContentPane(this.panel);
@@ -42,35 +55,75 @@ public class MinecraftMod {
     });
   }
 
-  public void selectMinecraftProcess(){
-    this.minecraftScanner = JavaRamSpider.attach(0, MinecraftScanner.class);
-    this.setItemTypes(minecraftScanner.findItemTypes());
+  public void selectMinecraftProcess(String hexPid){
+    try {
+      this.minecraftScanner = JavaRamSpider.attach(hexPid, MinecraftScanner.class);
+      this.setItemTypes(minecraftScanner.findItemTypes());
+    } catch (Exception e){
+      this.showAlert(e.getMessage());
+    }
   }
 
   public void changeItemType(){
-    this.minecraftScanner.findAndChange(
-        this.getCurrentItemType(), this.getCurrentQuantity(),
-        this.getNewQuantity(), this.getNewItemType()
-    );
+    try {
+      if(this.minecraftScanner == null){
+        throw new IllegalArgumentException("Find Minecraft process id first");
+      }
+      this.minecraftScanner.findAndChange(
+          this.getCurrentItemType(), this.getCurrentQuantity(),
+          this.getNewQuantity(), this.getNewItemType()
+      );
+    } catch (Exception e){
+      this.showAlert(e.getMessage());
+    }
+  }
+
+  private ItemChangeReq getItemToFind() {
+    return ItemChangeReq
+        .builder()
+        .build();
   }
 
   ItemType getNewItemType() {
-    throw new UnsupportedOperationException();
+    Validate.isTrue(this.targetItemTypeSlc.getSelectedIndex() != -1, "Select an item type");
+    return ((ItemTypeComboItem) this.targetItemTypeSlc.getSelectedItem()).getItemType();
   }
 
   int getNewQuantity() {
-    throw new UnsupportedOperationException();
+    try {
+      return Integer.parseInt(this.targetQtdIpt.getText());
+    } catch (Exception e){
+      throw new IllegalArgumentException("Pass valid quantity");
+    }
   }
 
   int getCurrentQuantity() {
-    throw new UnsupportedOperationException();
+    try {
+      return Integer.parseInt(this.sourceQtdIpt.getText());
+    } catch (Exception e){
+      throw new IllegalArgumentException("Pass valid quantity");
+    }
   }
 
   ItemType getCurrentItemType() {
-    throw new UnsupportedOperationException();
+    Validate.isTrue(this.sourceItemTypeSlc.getSelectedIndex() != -1, "Select an item type");
+    return ((ItemTypeComboItem) this.sourceItemTypeSlc.getSelectedItem()).getItemType();
   }
 
   void setItemTypes(Set<ItemType> itemTypes) {
-    throw new UnsupportedOperationException();
+    itemTypes.forEach(it -> {
+      final ItemTypeComboItem comboItem = ItemTypeComboItem.of(it);
+      this.sourceItemTypeSlc.addItem(comboItem);
+      this.targetItemTypeSlc.addItem(comboItem);
+    });
+//    final List<ItemTypeComboItem> itemTypeComboItems = itemTypes
+//        .stream()
+//        .map(ItemTypeComboItem::of)
+//        .collect(Collectors.toList());
+//    itemTypeComboItems.for
+  }
+
+  void showAlert(String msg){
+    JOptionPane.showMessageDialog(this.panel, msg, "Alert!", JOptionPane.WARNING_MESSAGE);
   }
 }
