@@ -2,13 +2,15 @@ package minecraft.mod;
 
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
 
-public class MinecraftMod {
+import minecraft.mod.entrypoint.MinecraftMod;
+
+public class MinecraftModMain {
 
   public static void main(String[] args) {
 
+    final MinecraftMod gui = new MinecraftMod();
+    gui.run();
 
-
-    final MinecraftScanner minecraftScanner = JavaRamSpider.attach(0, MinecraftScanner.class);
 
 //    final com.mageddo.jvmti.minecraft.MinecraftScanner scanner = ctx.getInstance(
 //        com.mageddo.jvmti.minecraft.MinecraftScanner.class);
