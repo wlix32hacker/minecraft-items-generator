@@ -61,9 +61,13 @@ public class MinecraftScanner {
   public int findAndChange(ItemType itemType, int quantity, int newQuantity, ItemType newItemType) {
     final List<Item> items = this.findItems(itemType, quantity);
     items.forEach(it -> {
-      log.debug("status=changing-status, it={}", it);
-      this.changeQuantity(it, newQuantity);
-      this.changeType(it, newItemType);
+      try {
+        log.debug("status=changing-status, it={}", it);
+        this.changeQuantity(it, newQuantity);
+        this.changeType(it, newItemType);
+      } catch (Exception e){
+        log.warn("status=can't-change-item, from={}, to={}, item={}", itemType, newItemType, it, e);
+      }
     });
     log.info("{} items changed", items.size());
     return items.size();
