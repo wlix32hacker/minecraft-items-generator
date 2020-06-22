@@ -1,16 +1,14 @@
 package minecraft.mod.entrypoint;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
-import com.mageddo.ramspiderjava.client.CurrentJarLoader;
-import com.mageddo.ramspiderjava.client.JavaRamSpider;
-
-import lombok.extern.slf4j.Slf4j;
-import minecraft.mod.ItemType;
-import minecraft.mod.MinecraftScanner;
-
-import org.apache.commons.lang3.Validate;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.net.URISyntaxException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -25,13 +23,16 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Set;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import com.mageddo.ramspiderjava.client.JavaRamSpider;
+
+import org.apache.commons.lang3.Validate;
+
+import lombok.extern.slf4j.Slf4j;
+import minecraft.mod.ItemType;
+import minecraft.mod.MinecraftScanner;
 
 @Slf4j
 public class MinecraftMod {
@@ -56,9 +57,10 @@ public class MinecraftMod {
     });
   }
 
-  public static void main(String[] args) throws InterruptedException, URISyntaxException {
+  public static void main(String[] args) throws InterruptedException {
     new MinecraftMod().run();
-    Thread.currentThread().join();
+    Thread.currentThread()
+        .join();
   }
 
   public void run() {
@@ -75,7 +77,7 @@ public class MinecraftMod {
   public void selectMinecraftProcess(String hexPid) {
     try {
       this.minecraftScanner = JavaRamSpider.attach(hexPid, MinecraftScanner.class);
-      this.setItemTypes(minecraftScanner.findItemTypes());
+      this.setItemTypes();
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
@@ -123,17 +125,18 @@ public class MinecraftMod {
     return ((ItemTypeComboItem) this.sourceItemTypeSlc.getSelectedItem()).getItemType();
   }
 
-  void setItemTypes(Set<ItemType> itemTypes) {
-    itemTypes.forEach(it -> {
-      final ItemTypeComboItem comboItem = ItemTypeComboItem.of(it);
-      this.sourceItemTypeSlc.addItem(comboItem);
-      this.targetItemTypeSlc.addItem(comboItem);
-    });
-//    final List<ItemTypeComboItem> itemTypeComboItems = itemTypes
-//        .stream()
-//        .map(ItemTypeComboItem::of)
-//        .collect(Collectors.toList());
-//    itemTypeComboItems.for
+  void setItemTypes() {
+    this.sourceItemTypeSlc.removeAllItems();
+    this.targetItemTypeSlc.removeAllItems();
+    this.minecraftScanner
+        .findItemTypes()
+        .stream()
+        .sorted(Comparator.comparing(ItemType::getName))
+        .forEach(it -> {
+          final ItemTypeComboItem comboItem = ItemTypeComboItem.of(it);
+          this.sourceItemTypeSlc.addItem(comboItem);
+          this.targetItemTypeSlc.addItem(comboItem);
+        });
   }
 
   void showAlert(String msg) {
@@ -203,7 +206,9 @@ public class MinecraftMod {
     ));
     final JLabel label2 = new JLabel();
     Font label2Font = this.$$$getFont$$$(null, -1, 14, label2.getFont());
-    if (label2Font != null) label2.setFont(label2Font);
+    if (label2Font != null) {
+      label2.setFont(label2Font);
+    }
     label2.setText("Change Item");
     panel2.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
@@ -251,7 +256,9 @@ public class MinecraftMod {
     final JPanel panel4 = new JPanel();
     panel4.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 0), -1, 10));
     Font panel4Font = this.$$$getFont$$$(null, -1, 16, panel4.getFont());
-    if (panel4Font != null) panel4.setFont(panel4Font);
+    if (panel4Font != null) {
+      panel4.setFont(panel4Font);
+    }
     panel4.setVisible(false);
     panel.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
@@ -262,7 +269,9 @@ public class MinecraftMod {
     ));
     final JLabel label5 = new JLabel();
     Font label5Font = this.$$$getFont$$$(null, -1, 14, label5.getFont());
-    if (label5Font != null) label5.setFont(label5Font);
+    if (label5Font != null) {
+      label5.setFont(label5Font);
+    }
     label5.setText("To");
     panel4.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
@@ -333,7 +342,9 @@ public class MinecraftMod {
    * @noinspection ALL
    */
   private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
-    if (currentFont == null) return null;
+    if (currentFont == null) {
+      return null;
+    }
     String resultName;
     if (fontName == null) {
       resultName = currentFont.getName();
