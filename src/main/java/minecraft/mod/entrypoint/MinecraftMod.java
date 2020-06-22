@@ -5,6 +5,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class MinecraftMod {
 
@@ -16,11 +17,20 @@ public class MinecraftMod {
   private JTextField sourceQtdIpt;
   private JButton findAndChangeButton;
 
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("Minecraft Mod v1.0");
-    frame.setContentPane(new MinecraftMod().panel);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.pack();
-    frame.setVisible(true);
+  public void run() {
+    SwingUtilities.invokeLater(() -> {
+      System.out.println("running");
+      JFrame frame = new JFrame("Minecraft Mod v1.0");
+      frame.setLocationRelativeTo(null);
+      frame.setContentPane(this.panel);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.pack();
+      frame.setVisible(true);
+    });
+  }
+
+  public static void main(String[] args) throws InterruptedException {
+    new MinecraftMod().run();
+    Thread.currentThread().join();
   }
 }
