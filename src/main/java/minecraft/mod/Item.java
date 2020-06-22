@@ -1,4 +1,4 @@
-package minecraft;
+package minecraft.mod;
 
 import com.mageddo.ramspiderjava.InstanceValue;
 

@@ -1,4 +1,4 @@
-package minecraft;
+package minecraft.mod;
 
 import java.util.List;
 import java.util.Set;

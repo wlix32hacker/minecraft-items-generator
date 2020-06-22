@@ -1,9 +1,5 @@
-package minecraft;
+package minecraft.mod;
 
-import java.util.Set;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
 
 public class MinecraftMod {
