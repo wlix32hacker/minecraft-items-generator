@@ -6,6 +6,8 @@ public class MinecraftMod {
 
   public static void main(String[] args) {
 
+
+
     final MinecraftScanner minecraftScanner = JavaRamSpider.attach(0, MinecraftScanner.class);
 
 //    final com.mageddo.jvmti.minecraft.MinecraftScanner scanner = ctx.getInstance(
