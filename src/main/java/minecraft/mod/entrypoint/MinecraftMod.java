@@ -70,6 +70,7 @@ public class MinecraftMod {
       frame.setContentPane(this.panel);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.pack();
+      frame.setResizable(false);
       frame.setVisible(true);
     });
   }
