@@ -1,5 +1,6 @@
 plugins {
   id "java"
+  id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 repositories {
@@ -21,4 +22,13 @@ dependencies {
 
   testCompileOnly 'org.projectlombok:lombok:1.18.12'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+}
+
+jar {
+  manifest {
+    attributes(
+        "Main-Class": "minecraft.mod.entrypoint.MinecraftMod",
+        "Agent-Class": "com.mageddo.ramspiderjava.agent.ClassAgent"
+    )
+  }
 }
