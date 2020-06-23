@@ -4,11 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.net.URISyntaxException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -32,7 +28,7 @@ import org.apache.commons.lang3.Validate;
 
 import lombok.extern.slf4j.Slf4j;
 import minecraft.mod.ItemType;
-import minecraft.mod.MinecraftScanner;
+import minecraft.mod.MinecraftItemScanner;
 
 @Slf4j
 public class MinecraftMod {
@@ -44,16 +40,16 @@ public class MinecraftMod {
   private JComboBox sourceItemTypeSlc;
   private JTextField sourceQtdIpt;
   private JButton findAndChangeButton;
-  private JTextField pid;
   private JButton findProcessButton;
-  private MinecraftScanner minecraftScanner;
+  private JLabel messagesLbl;
+  private MinecraftItemScanner minecraftItemScanner;
 
   public MinecraftMod() {
     this.findAndChangeButton.addActionListener(e -> {
       this.changeItemType();
     });
     this.findProcessButton.addActionListener(e -> {
-      this.selectMinecraftProcess(this.pid.getText());
+      this.selectMinecraftProcess();
     });
   }
 
@@ -75,9 +71,12 @@ public class MinecraftMod {
     });
   }
 
-  public void selectMinecraftProcess(String hexPid) {
+  void selectMinecraftProcess() {
     try {
-      this.minecraftScanner = JavaRamSpider.attach(hexPid, MinecraftScanner.class);
+      this.minecraftItemScanner = minecraft.mod.MinecraftMod
+          .create()
+          .attach()
+      ;
       this.setItemTypes();
     } catch (Exception e) {
       log.warn("", e);
@@ -87,10 +86,10 @@ public class MinecraftMod {
 
   public void changeItemType() {
     try {
-      if (this.minecraftScanner == null) {
+      if (this.minecraftItemScanner == null) {
         throw new IllegalArgumentException("Find Minecraft process id first");
       }
-      this.minecraftScanner.findAndChange(
+      this.minecraftItemScanner.findAndChange(
           this.getCurrentItemType(), this.getCurrentQuantity(),
           this.getNewQuantity(), this.getNewItemType()
       );
@@ -129,7 +128,7 @@ public class MinecraftMod {
   void setItemTypes() {
     this.sourceItemTypeSlc.removeAllItems();
     this.targetItemTypeSlc.removeAllItems();
-    this.minecraftScanner
+    this.minecraftItemScanner
         .findItemTypes()
         .stream()
         .sorted(Comparator.comparing(ItemType::getName))
@@ -163,7 +162,7 @@ public class MinecraftMod {
     panel = new JPanel();
     panel.setLayout(new GridLayoutManager(6, 1, new Insets(10, 10, 10, 10), -1, -1));
     final JPanel panel1 = new JPanel();
-    panel1.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+    panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
     panel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
@@ -180,22 +179,16 @@ public class MinecraftMod {
     minecraftVersion.setModel(defaultComboBoxModel1);
     panel1.add(minecraftVersion,
         new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-            GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), null, null,
-            0, false
+            GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(60, -1), null, null, 0,
+            false
         )
     );
-    pid = new JTextField();
-    pid.setToolTipText("minecraft process id in hex format");
-    panel1.add(pid, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 26),
-        new Dimension(150, -1), new Dimension(100, -1), 0, false
-    ));
     findProcessButton = new JButton();
     findProcessButton.setText("find process");
     panel1.add(findProcessButton,
-        new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+            GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(125, -1), 0, false
         )
     );
     final JPanel panel2 = new JPanel();

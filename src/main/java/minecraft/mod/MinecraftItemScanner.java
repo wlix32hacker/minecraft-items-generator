@@ -12,19 +12,16 @@ import com.mageddo.ramspiderjava.ClassInstanceService;
 import com.mageddo.ramspiderjava.FieldId;
 import com.mageddo.ramspiderjava.InstanceValue;
 
-import com.mageddo.ramspiderjava.client.JavaRamSpider;
-
-import dagger.Component;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Singleton
-public class MinecraftScanner {
+public class MinecraftItemScanner {
 
   private final ClassInstanceService classInstanceService;
 
   @Inject
-  public MinecraftScanner(ClassInstanceService classInstanceService) {
+  public MinecraftItemScanner(ClassInstanceService classInstanceService) {
     this.classInstanceService = classInstanceService;
   }
 
