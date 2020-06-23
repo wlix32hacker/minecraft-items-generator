@@ -1,11 +1,12 @@
 package minecraft.mod;
 
 import com.google.inject.Guice;
-import com.mageddo.coc.DaggerCocFactory;
 import com.mageddo.coc.Window;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,7 +22,7 @@ public class MinecraftMod {
     this.minecraftProcessFinder = minecraftProcessFinder;
   }
 
-  public MinecraftItemScanner attach(){
+  public Pair<Integer, MinecraftItemScanner> attach(){
     final Window minecraft = this.minecraftProcessFinder.find();
     if(minecraft == null){
       throw new IllegalStateException("Minecraft wasn't found, is it running?");
@@ -29,7 +30,7 @@ public class MinecraftMod {
     log.info("attaching-to={}", minecraft);
     final MinecraftItemScanner itemScanner = JavaRamSpider.attach(minecraft.pid(), MinecraftItemScanner.class);
     log.info("status=attached!");
-    return itemScanner;
+    return Pair.of(minecraft.pid(), itemScanner);
   }
 
   public static MinecraftMod create(){

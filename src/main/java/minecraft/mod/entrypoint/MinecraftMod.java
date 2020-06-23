@@ -30,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 import minecraft.mod.ItemType;
 import minecraft.mod.MinecraftItemScanner;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 @Slf4j
 public class MinecraftMod {
 
@@ -42,6 +44,7 @@ public class MinecraftMod {
   private JButton findAndChangeButton;
   private JButton findProcessButton;
   private JLabel messagesLbl;
+  private JLabel foundPid;
   private MinecraftItemScanner minecraftItemScanner;
 
   public MinecraftMod() {
@@ -73,10 +76,11 @@ public class MinecraftMod {
 
   void selectMinecraftProcess() {
     try {
-      this.minecraftItemScanner = minecraft.mod.MinecraftMod
+      final Pair<Integer, MinecraftItemScanner> result = minecraft.mod.MinecraftMod
           .create()
-          .attach()
-      ;
+          .attach();
+      this.foundPid.setText(String.format("( 0x%x/%d )", result.getKey(), result.getKey()));
+      this.minecraftItemScanner = result.getValue();
       this.setItemTypes();
     } catch (Exception e) {
       log.warn("", e);
@@ -160,17 +164,12 @@ public class MinecraftMod {
    */
   private void $$$setupUI$$$() {
     panel = new JPanel();
-    panel.setLayout(new GridLayoutManager(6, 1, new Insets(10, 10, 10, 10), -1, -1));
+    panel.setLayout(new GridLayoutManager(7, 1, new Insets(10, 10, 10, 10), -1, -1));
     final JPanel panel1 = new JPanel();
-    panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+    panel1.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
     panel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
-    ));
-    final JLabel label1 = new JLabel();
-    label1.setText("Minecraft Version");
-    panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
     minecraftVersion = new JComboBox();
     final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
@@ -178,7 +177,7 @@ public class MinecraftMod {
     defaultComboBoxModel1.addElement("1.14");
     minecraftVersion.setModel(defaultComboBoxModel1);
     panel1.add(minecraftVersion,
-        new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(60, -1), null, null, 0,
             false
         )
@@ -186,11 +185,21 @@ public class MinecraftMod {
     findProcessButton = new JButton();
     findProcessButton.setText("find process");
     panel1.add(findProcessButton,
-        new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(125, -1), 0, false
         )
     );
+    foundPid = new JLabel();
+    foundPid.setText("(no process)");
+    panel1.add(foundPid, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, -1), null, null, 0, false
+    ));
+    final JLabel label1 = new JLabel();
+    label1.setText("Version");
+    panel1.add(label1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
     panel2.setVisible(false);
@@ -323,6 +332,17 @@ public class MinecraftMod {
     final Spacer spacer1 = new Spacer();
     panel6.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
+    ));
+    final JPanel panel7 = new JPanel();
+    panel7.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+    panel.add(panel7, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
+    ));
+    messagesLbl = new JLabel();
+    messagesLbl.setText("");
+    panel7.add(messagesLbl, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
   }
 
