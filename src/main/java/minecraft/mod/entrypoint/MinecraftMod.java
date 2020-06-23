@@ -207,9 +207,7 @@ public class MinecraftMod {
     ));
     final JLabel label2 = new JLabel();
     Font label2Font = this.$$$getFont$$$(null, -1, 14, label2.getFont());
-    if (label2Font != null) {
-      label2.setFont(label2Font);
-    }
+    if (label2Font != null) label2.setFont(label2Font);
     label2.setText("Change Item");
     panel2.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
@@ -231,7 +229,7 @@ public class MinecraftMod {
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
     final JLabel label4 = new JLabel();
-    label4.setText("Quantities");
+    label4.setText("Quantity");
     panel3.add(label4, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
@@ -257,9 +255,7 @@ public class MinecraftMod {
     final JPanel panel4 = new JPanel();
     panel4.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 0), -1, 10));
     Font panel4Font = this.$$$getFont$$$(null, -1, 16, panel4.getFont());
-    if (panel4Font != null) {
-      panel4.setFont(panel4Font);
-    }
+    if (panel4Font != null) panel4.setFont(panel4Font);
     panel4.setVisible(false);
     panel.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
@@ -270,9 +266,7 @@ public class MinecraftMod {
     ));
     final JLabel label5 = new JLabel();
     Font label5Font = this.$$$getFont$$$(null, -1, 14, label5.getFont());
-    if (label5Font != null) {
-      label5.setFont(label5Font);
-    }
+    if (label5Font != null) label5.setFont(label5Font);
     label5.setText("To");
     panel4.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
@@ -343,9 +337,7 @@ public class MinecraftMod {
    * @noinspection ALL
    */
   private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
-    if (currentFont == null) {
-      return null;
-    }
+    if (currentFont == null) return null;
     String resultName;
     if (fontName == null) {
       resultName = currentFont.getName();
@@ -366,4 +358,5 @@ public class MinecraftMod {
   public JComponent $$$getRootComponent$$$() {
     return panel;
   }
+
 }

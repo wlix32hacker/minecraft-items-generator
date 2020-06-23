@@ -12,6 +12,9 @@ import com.mageddo.ramspiderjava.ClassInstanceService;
 import com.mageddo.ramspiderjava.FieldId;
 import com.mageddo.ramspiderjava.InstanceValue;
 
+import com.mageddo.ramspiderjava.client.JavaRamSpider;
+
+import dagger.Component;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

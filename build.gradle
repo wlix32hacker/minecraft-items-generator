@@ -15,13 +15,14 @@ java {
 
 dependencies {
 
-  compileOnly 'org.projectlombok:lombok:1.18.12'
-  annotationProcessor 'org.projectlombok:lombok:1.18.12'
-  implementation 'com.intellij:forms_rt:7.0.3'
-  implementation 'com.mageddo.ramspider:ram-spider-java:1.0.1'
+  compileOnly("org.projectlombok:lombok:1.18.12")
+  annotationProcessor("org.projectlombok:lombok:1.18.12")
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.12'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+  implementation("com.intellij:forms_rt:7.0.3")
+  implementation("com.mageddo.ramspider:ram-spider-java:1.0.1")
+
+  testCompileOnly "org.projectlombok:lombok:1.18.12"
+  testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
 }
 
 jar {
