@@ -18,7 +18,7 @@
         <children>
           <component id="15847" class="javax.swing.JComboBox" binding="minecraftVersion">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="60" height="-1"/>
               </grid>
             </constraints>
@@ -29,9 +29,17 @@
               </model>
             </properties>
           </component>
+          <component id="5f974" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Version"/>
+            </properties>
+          </component>
           <component id="9132c" class="javax.swing.JButton" binding="findProcessButton" default-binding="true">
             <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <maximum-size width="125" height="-1"/>
               </grid>
             </constraints>
@@ -41,20 +49,12 @@
           </component>
           <component id="a7fa5" class="javax.swing.JLabel" binding="foundPid">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="80" height="-1"/>
               </grid>
             </constraints>
             <properties>
               <text value="(no process)"/>
-            </properties>
-          </component>
-          <component id="5f974" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Version"/>
             </properties>
           </component>
         </children>
@@ -221,6 +221,7 @@
             <properties>
               <background color="-15654847"/>
               <borderPainted value="true"/>
+              <enabled value="false"/>
               <foreground color="-65538"/>
               <text value="find and change"/>
             </properties>

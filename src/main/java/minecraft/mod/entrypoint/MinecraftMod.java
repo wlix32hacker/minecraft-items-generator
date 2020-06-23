@@ -82,6 +82,7 @@ public class MinecraftMod {
       this.foundPid.setText(String.format("( 0x%x/%d )", result.getKey(), result.getKey()));
       this.minecraftItemScanner = result.getValue();
       this.setItemTypes();
+      this.findAndChangeButton.setEnabled(true);
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
@@ -177,28 +178,28 @@ public class MinecraftMod {
     defaultComboBoxModel1.addElement("1.14");
     minecraftVersion.setModel(defaultComboBoxModel1);
     panel1.add(minecraftVersion,
-        new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(60, -1), null, null, 0,
             false
         )
     );
+    final JLabel label1 = new JLabel();
+    label1.setText("Version");
+    panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
     findProcessButton = new JButton();
     findProcessButton.setText("find process");
     panel1.add(findProcessButton,
-        new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(125, -1), 0, false
         )
     );
     foundPid = new JLabel();
     foundPid.setText("(no process)");
-    panel1.add(foundPid, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    panel1.add(foundPid, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, -1), null, null, 0, false
-    ));
-    final JLabel label1 = new JLabel();
-    label1.setText("Version");
-    panel1.add(label1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -321,6 +322,7 @@ public class MinecraftMod {
     findAndChangeButton = new JButton();
     findAndChangeButton.setBackground(new Color(-15654847));
     findAndChangeButton.setBorderPainted(true);
+    findAndChangeButton.setEnabled(false);
     findAndChangeButton.setForeground(new Color(-65538));
     findAndChangeButton.setText("find and change");
     panel6.add(findAndChangeButton,
