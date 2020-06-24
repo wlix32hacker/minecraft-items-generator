@@ -1,11 +1,10 @@
 package minecraft.mod;
 
-import com.mageddo.coc.Window;
-import com.mageddo.coc.WindowDAO;
-import com.mageddo.coc.WindowService;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import com.mageddo.coc.Window;
+import com.mageddo.coc.WindowDAO;
 
 @Singleton
 public class MinecraftProcessFinder {

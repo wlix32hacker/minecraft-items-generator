@@ -1,15 +1,15 @@
 package minecraft.mod;
 
-import com.google.inject.Guice;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.mageddo.coc.Window;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
-
-import lombok.extern.slf4j.Slf4j;
+import com.mageddo.ramspiderjava.client.RamSpiderAgent;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Singleton
@@ -28,15 +28,18 @@ public class MinecraftMod {
       throw new IllegalStateException("Minecraft wasn't found, is it running?");
     }
     log.info("attaching-to={}", minecraft);
-    final MinecraftItemScanner itemScanner = JavaRamSpider.attach(minecraft.pid(), MinecraftItemScanner.class);
+    final JavaRamSpider javaRamSpider = JavaRamSpider.attach(minecraft.pid());
     log.info("status=attached!");
-    return Pair.of(minecraft.pid(), itemScanner);
+    return Pair.of(
+        minecraft.pid(),
+        MinecraftItemScanner_Factory.newInstance(javaRamSpider.classInstanceService())
+    );
   }
 
   public static MinecraftMod create(){
-    return Guice
-        .createInjector(new MinecraftDiModule())
-        .getInstance(MinecraftMod.class)
-    ;
+    return DaggerMinecraftModFactory
+        .create()
+        .minecraftMod()
+        ;
   }
 }
