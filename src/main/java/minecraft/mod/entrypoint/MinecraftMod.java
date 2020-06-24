@@ -58,7 +58,8 @@ public class MinecraftMod {
 
   public static void main(String[] args) throws InterruptedException {
     new MinecraftMod().run();
-    Thread.currentThread()
+    Thread
+        .currentThread()
         .join();
   }
 
