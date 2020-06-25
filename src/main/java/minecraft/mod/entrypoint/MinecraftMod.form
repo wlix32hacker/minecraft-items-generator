@@ -111,11 +111,7 @@
               </grid>
             </constraints>
             <properties>
-              <model>
-                <item value="Cobblestone"/>
-                <item value="Dirt"/>
-                <item value="Diamond"/>
-              </model>
+              <model/>
             </properties>
           </component>
           <component id="8a5f7" class="javax.swing.JTextField" binding="sourceQtdIpt">
@@ -169,11 +165,7 @@
               </grid>
             </constraints>
             <properties>
-              <model>
-                <item value="Cobblestone"/>
-                <item value="Dirt"/>
-                <item value="Diamond"/>
-              </model>
+              <model/>
             </properties>
           </component>
           <component id="b6043" class="javax.swing.JTextField" binding="targetQtdIpt">
