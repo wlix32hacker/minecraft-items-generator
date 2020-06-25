@@ -26,5 +26,4 @@ public class MinecraftProcessFinder {
     ;
   }
 
-  public String getVersion()
 }

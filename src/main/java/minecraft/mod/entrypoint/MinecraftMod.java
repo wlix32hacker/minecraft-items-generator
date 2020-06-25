@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.util.Comparator;
 
+import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -22,19 +23,28 @@ import javax.swing.border.TitledBorder;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-
-import minecraft.mod.MinecraftVersion;
+import com.mageddo.ramspiderjava.ResourceService;
 
 import org.apache.commons.lang3.Validate;
-
-import lombok.extern.slf4j.Slf4j;
-import minecraft.mod.ItemType;
-import minecraft.mod.MinecraftItemScanner;
-
 import org.apache.commons.lang3.tuple.Pair;
 
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import minecraft.mod.DaggerMinecraftModFactory;
+import minecraft.mod.ItemType;
+import minecraft.mod.MinecraftAttache;
+import minecraft.mod.MinecraftItemScanner;
+import minecraft.mod.MinecraftVersion;
+
+@ToString
 @Slf4j
 public class MinecraftMod {
+
+  @Inject
+  ResourceService resourceService;
+
+  @Inject
+  MinecraftAttache minecraftAttache;
 
   private JPanel panel;
   private JComboBox minecraftVersion;
@@ -65,6 +75,14 @@ public class MinecraftMod {
   }
 
   public void run() {
+
+    DaggerMinecraftModFactory
+        .create()
+        .inject(this)
+    ;
+
+    System.out.println(this);
+
     this.populateVersions();
     SwingUtilities.invokeLater(() -> {
       JFrame frame = new JFrame("Minecraft Mod v1.0");
@@ -77,6 +95,7 @@ public class MinecraftMod {
     });
   }
 
+  @Deprecated
   void populateVersions() {
     this.minecraftVersion.removeAllItems();
     for (MinecraftVersion value : MinecraftVersion.values()) {
@@ -86,13 +105,14 @@ public class MinecraftMod {
 
   void selectMinecraftProcess() {
     try {
-      final Pair<Integer, MinecraftItemScanner> result = minecraft.mod.MinecraftMod
+      final Pair<Integer, MinecraftItemScanner> result = MinecraftAttache
           .create()
-          .attach();
+          .findAndAttachToRunning();
       this.foundPid.setText(String.format("( 0x%x/%d )", result.getKey(), result.getKey()));
       this.minecraftItemScanner = result.getValue();
       this.setItemTypes();
       this.findAndChangeButton.setEnabled(true);
+      log.warn("minecraft version");
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
@@ -254,9 +274,6 @@ public class MinecraftMod {
     ));
     sourceItemTypeSlc = new JComboBox();
     final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-    defaultComboBoxModel2.addElement("Cobblestone");
-    defaultComboBoxModel2.addElement("Dirt");
-    defaultComboBoxModel2.addElement("Diamond");
     sourceItemTypeSlc.setModel(defaultComboBoxModel2);
     panel3.add(sourceItemTypeSlc,
         new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
@@ -302,9 +319,6 @@ public class MinecraftMod {
     ));
     targetItemTypeSlc = new JComboBox();
     final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
-    defaultComboBoxModel3.addElement("Cobblestone");
-    defaultComboBoxModel3.addElement("Dirt");
-    defaultComboBoxModel3.addElement("Diamond");
     targetItemTypeSlc.setModel(defaultComboBoxModel3);
     panel5.add(targetItemTypeSlc,
         new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,

@@ -5,24 +5,21 @@ import javax.inject.Singleton;
 
 import com.mageddo.coc.Window;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
-import com.mageddo.ramspiderjava.client.RamSpiderAgent;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Singleton
-public class MinecraftMod {
+public class MinecraftAttache {
 
   private final MinecraftProcessFinder minecraftProcessFinder;
 
   @Inject
-  public MinecraftMod(MinecraftProcessFinder minecraftProcessFinder) {
+  public MinecraftAttache(MinecraftProcessFinder minecraftProcessFinder) {
     this.minecraftProcessFinder = minecraftProcessFinder;
   }
 
-  public Pair<Integer, MinecraftItemScanner> attach(){
+  public Minecraft findAndAttachToRunning(){
     final Window minecraft = this.minecraftProcessFinder.find();
     if(minecraft == null){
       throw new IllegalStateException("Minecraft wasn't found, is it running?");
@@ -30,13 +27,14 @@ public class MinecraftMod {
     log.info("attaching-to={}", minecraft);
     final JavaRamSpider javaRamSpider = JavaRamSpider.attach(minecraft.pid());
     log.info("status=attached!");
-    return Pair.of(
-        minecraft.pid(),
-        MinecraftItemScanner_Factory.newInstance(javaRamSpider.classInstanceService())
-    );
+//    return Pair.of(
+//        minecraft.pid(),
+//        MinecraftItemScanner_Factory.newInstance(javaRamSpider.classInstanceService())
+//    );
+    throw new UnsupportedOperationException();
   }
 
-  public static MinecraftMod create(){
+  public static MinecraftAttache create(){
     return DaggerMinecraftModFactory
         .create()
         .minecraftMod()
