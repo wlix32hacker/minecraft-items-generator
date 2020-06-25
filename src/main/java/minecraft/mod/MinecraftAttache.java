@@ -25,13 +25,12 @@ public class MinecraftAttache {
       throw new IllegalStateException("Minecraft wasn't found, is it running?");
     }
     log.info("attaching-to={}", minecraft);
-    final JavaRamSpider javaRamSpider = JavaRamSpider.attach(minecraft.pid());
+    JavaRamSpider.attach(minecraft.pid());
     log.info("status=attached!");
-//    return Pair.of(
-//        minecraft.pid(),
-//        MinecraftItemScanner_Factory.newInstance(javaRamSpider.classInstanceService())
-//    );
-    throw new UnsupportedOperationException();
+    return DaggerMinecraft
+        .builder()
+        .build()
+        ;
   }
 
   public static MinecraftAttache create(){

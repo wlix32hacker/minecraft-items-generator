@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.util.Comparator;
 
-import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -23,28 +22,20 @@ import javax.swing.border.TitledBorder;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.mageddo.ramspiderjava.ResourceService;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.tuple.Pair;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import minecraft.mod.DaggerMinecraftModFactory;
 import minecraft.mod.ItemType;
+import minecraft.mod.Minecraft;
 import minecraft.mod.MinecraftAttache;
-import minecraft.mod.MinecraftItemScanner;
 import minecraft.mod.MinecraftVersion;
 
 @ToString
 @Slf4j
 public class MinecraftMod {
-
-  @Inject
-  ResourceService resourceService;
-
-  @Inject
-  MinecraftAttache minecraftAttache;
 
   private JPanel panel;
   private JComboBox minecraftVersion;
@@ -56,7 +47,7 @@ public class MinecraftMod {
   private JButton findProcessButton;
   private JLabel messagesLbl;
   private JLabel foundPid;
-  private MinecraftItemScanner minecraftItemScanner;
+  private Minecraft minecraft;
 
   public MinecraftMod() {
     this.findAndChangeButton.addActionListener(e -> {
@@ -105,11 +96,11 @@ public class MinecraftMod {
 
   void selectMinecraftProcess() {
     try {
-      final Pair<Integer, MinecraftItemScanner> result = MinecraftAttache
+      this.minecraft = MinecraftAttache
           .create()
           .findAndAttachToRunning();
-      this.foundPid.setText(String.format("( 0x%x/%d )", result.getKey(), result.getKey()));
-      this.minecraftItemScanner = result.getValue();
+
+      this.foundPid.setText(String.format("( 0x%x/%d )", minecraft.pid(), minecraft.pid()));
       this.setItemTypes();
       this.findAndChangeButton.setEnabled(true);
       log.warn("minecraft version");
@@ -121,16 +112,17 @@ public class MinecraftMod {
 
   public void changeItemType() {
     try {
-      if (this.minecraftItemScanner == null) {
+      if (this.minecraft == null) {
         throw new IllegalArgumentException("Find Minecraft process id first");
       }
-      this.minecraftItemScanner.findAndChange(
-          this.getMinecraftVersion(),
-          this.getCurrentItemType(),
-          this.getCurrentQuantity(),
-          this.getNewItemType(),
-          this.getNewQuantity()
-      );
+      this.minecraft
+          .minecraftItemScanner()
+          .findAndChange(
+              this.getCurrentItemType(),
+              this.getCurrentQuantity(),
+              this.getNewItemType(),
+              this.getNewQuantity()
+          );
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
@@ -166,8 +158,9 @@ public class MinecraftMod {
   void setItemTypes() {
     this.sourceItemTypeSlc.removeAllItems();
     this.targetItemTypeSlc.removeAllItems();
-    this.minecraftItemScanner
-        .findItemTypes(this.getMinecraftVersion())
+    this.minecraft
+        .minecraftItemScanner()
+        .findItemTypes()
         .stream()
         .sorted(Comparator.comparing(ItemType::getName))
         .forEach(it -> {
@@ -177,6 +170,10 @@ public class MinecraftMod {
         });
   }
 
+  /**
+   * O código deveria achar sozinho via agent
+   */
+  @Deprecated
   MinecraftVersion getMinecraftVersion() {
     return ((MinecraftVersionComboItem) this.minecraftVersion.getSelectedItem())
         .getMinecraftVersion()

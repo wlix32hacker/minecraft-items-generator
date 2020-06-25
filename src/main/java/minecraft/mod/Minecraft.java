@@ -2,31 +2,32 @@ package minecraft.mod;
 
 import javax.inject.Singleton;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mageddo.ramspiderjava.ResourceService;
+import com.mageddo.ramspiderjava.client.di.RamSpiderModule;
 
 import dagger.Component;
-import lombok.SneakyThrows;
+import dagger.Provides;
 
 @Singleton
-@Component
-public class Minecraft {
+@Component(modules = {RamSpiderModule.class, Minecraft.Module.class})
+public interface Minecraft {
 
-  private final ResourceService resourceService;
-  private final ObjectMapper objectMapper;
-  private final MinecraftItemScanner minecraftItemScanner;
+  int pid();
 
-  public void findAndChange(){
-    final GameVersion version = this.getVersion();
-    version.getBuildTime()
-  }
+  MinecraftItemScanner minecraftItemScanner();
 
+  @dagger.Module
+  class Module {
 
-  @SneakyThrows
-  public GameVersion getVersion(){
-    return this.objectMapper.readValue(
-        this.resourceService.getResourceString("/version.json"),
-        GameVersion.class
-    );
+    private final int pid;
+
+    public Module(int pid) {
+      this.pid = pid;
+    }
+
+    @Provides
+    @Singleton
+    int pid(){
+      return this.pid;
+    }
   }
 }
