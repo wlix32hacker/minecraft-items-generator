@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MinecraftVersion {
+public enum Version {
 
   V1_15(
       new ItemDef(ClassId.of("ben"), FieldId.of("d"), FieldId.of("f")),

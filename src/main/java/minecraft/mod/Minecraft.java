@@ -20,7 +20,7 @@ public interface Minecraft {
 
     private final int pid;
 
-    public Module(int pid) {
+    Module(int pid) {
       this.pid = pid;
     }
 

@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 import com.mageddo.coc.Window;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
 
+import com.mageddo.ramspiderjava.client.di.HttpClientModule;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,15 +22,17 @@ public class MinecraftAttache {
   }
 
   public Minecraft findAndAttachToRunning(){
-    final Window minecraft = this.minecraftProcessFinder.find();
-    if(minecraft == null){
+    final Window minecraftWindow = this.minecraftProcessFinder.find();
+    if(minecraftWindow == null){
       throw new IllegalStateException("Minecraft wasn't found, is it running?");
     }
-    log.info("attaching-to={}", minecraft);
-    JavaRamSpider.attach(minecraft.pid());
+    log.info("attaching-to={}", minecraftWindow);
+    JavaRamSpider.attach(minecraftWindow.pid());
     log.info("status=attached!");
     return DaggerMinecraft
         .builder()
+        .httpClientModule(new HttpClientModule(minecraftWindow.pid()))
+        .module(new Minecraft.Module(minecraftWindow.pid()))
         .build()
         ;
   }

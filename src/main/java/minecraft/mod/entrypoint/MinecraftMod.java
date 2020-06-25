@@ -23,17 +23,16 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
+import minecraft.mod.Version;
+
 import org.apache.commons.lang3.Validate;
 
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import minecraft.mod.DaggerMinecraftModFactory;
 import minecraft.mod.ItemType;
 import minecraft.mod.Minecraft;
 import minecraft.mod.MinecraftAttache;
-import minecraft.mod.MinecraftVersion;
 
-@ToString
 @Slf4j
 public class MinecraftMod {
 
@@ -89,7 +88,7 @@ public class MinecraftMod {
   @Deprecated
   void populateVersions() {
     this.minecraftVersion.removeAllItems();
-    for (MinecraftVersion value : MinecraftVersion.values()) {
+    for (Version value : Version.values()) {
       this.minecraftVersion.addItem(MinecraftVersionComboItem.of(value));
     }
   }
@@ -168,16 +167,6 @@ public class MinecraftMod {
           this.sourceItemTypeSlc.addItem(comboItem);
           this.targetItemTypeSlc.addItem(comboItem);
         });
-  }
-
-  /**
-   * O código deveria achar sozinho via agent
-   */
-  @Deprecated
-  MinecraftVersion getMinecraftVersion() {
-    return ((MinecraftVersionComboItem) this.minecraftVersion.getSelectedItem())
-        .getMinecraftVersion()
-        ;
   }
 
   void showAlert(String msg) {
