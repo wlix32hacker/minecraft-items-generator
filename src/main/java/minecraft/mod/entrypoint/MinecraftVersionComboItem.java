@@ -17,9 +17,7 @@ public class MinecraftVersionComboItem {
   @Override
   public String toString() {
     return this.version
-        .name()
-        .replaceAll("_", ".")
-        .toLowerCase()
-        ;
+        .getVersion()
+        .getName();
   }
 }
