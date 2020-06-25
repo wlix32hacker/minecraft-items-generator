@@ -32,7 +32,7 @@ public class MinecraftAttache {
     return DaggerMinecraft
         .builder()
         .httpClientModule(new HttpClientModule(minecraftWindow.pid()))
-        .module(new Minecraft.Module(minecraftWindow.pid()))
+        .minecraftModule(new MinecraftModule(minecraftWindow.pid()))
         .build()
         ;
   }

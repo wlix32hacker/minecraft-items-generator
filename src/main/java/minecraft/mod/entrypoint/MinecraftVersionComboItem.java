@@ -5,7 +5,7 @@ import lombok.Value;
 import minecraft.mod.VersionDefs;
 
 @Value
-@EqualsAndHashCode(of = "minecraftVersion")
+@EqualsAndHashCode(of = "version")
 public class MinecraftVersionComboItem {
 
   VersionDefs version;
