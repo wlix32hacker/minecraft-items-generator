@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.mageddo.ramspiderjava.ClassId;
 import com.mageddo.ramspiderjava.ClassInstanceService;
-import com.mageddo.ramspiderjava.FieldId;
 import com.mageddo.ramspiderjava.InstanceValue;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +26,9 @@ public class MinecraftItemScanner {
   /**
    * Get all minecraft items loaded at the game just now
    */
-  public List<Item> findItems() {
+  public List<Item> findItems(MinecraftVersion version) {
     return this.classInstanceService
-      .scanAndGetValues(ClassId.of("ben"))
+      .scanAndGetValues(version.getItemDef().getClassId())
       .stream()
       .map(Item::from)
       .filter(it -> it.getQuantity() > 0)
@@ -38,8 +36,8 @@ public class MinecraftItemScanner {
       ;
   }
 
-  public List<Item> findItems(ItemType itemType, int quantity) {
-    final List<Item> foundItems = this.findItems()
+  public List<Item> findItems(MinecraftVersion version, ItemType itemType, int quantity) {
+    final List<Item> foundItems = this.findItems(version)
       .stream()
       .filter(it -> {
         return it.getItemType().equals(itemType.getName())
@@ -51,20 +49,25 @@ public class MinecraftItemScanner {
     return foundItems;
   }
 
-  public int findAndChange(ItemType itemType, int quantity, int newQuantity) {
-    final List<Item> items = this.findItems(itemType, quantity);
-    items.forEach(it -> this.changeQuantity(it, newQuantity));
+  public int findAndChange(MinecraftVersion version, ItemType itemType, int quantity, int newQuantity) {
+    final List<Item> items = this.findItems(version, itemType, quantity);
+    items.forEach(it -> this.changeQuantity(it, version, newQuantity));
     log.info("{} items changed", items.size());
     return items.size();
   }
 
-  public int findAndChange(ItemType itemType, int quantity, int newQuantity, ItemType newItemType) {
-    final List<Item> items = this.findItems(itemType, quantity);
+  public int findAndChange(
+      MinecraftVersion version,
+      ItemType itemType,
+      int quantity,
+      ItemType newItemType, int newQuantity
+  ) {
+    final List<Item> items = this.findItems(version, itemType, quantity);
     items.forEach(it -> {
       try {
         log.debug("status=changing-status, it={}", it);
-        this.changeQuantity(it, newQuantity);
-        this.changeType(it, newItemType);
+        this.changeQuantity(it, version, newQuantity);
+        this.changeType(it, version, newItemType);
       } catch (Exception e){
         log.warn("status=can't-change-item, from={}, to={}, item={}", itemType, newItemType, it, e);
       }
@@ -73,25 +76,25 @@ public class MinecraftItemScanner {
     return items.size();
   }
 
-  void changeType(Item item, ItemType itemType) {
+  void changeType(Item item, MinecraftVersion version, ItemType itemType) {
     this.classInstanceService.setFieldValue(
       item.getInstanceValue().getId(),
-      FieldId.of("f"),
+      version.getItemDef().getItemTypeField(),
       InstanceValue.of(itemType.getInstance().getId())
     );
   }
 
-  void changeQuantity(Item item, int newQuantity) {
+  void changeQuantity(Item item, MinecraftVersion version, int newQuantity) {
     this.classInstanceService.setFieldValue(
       item.getInstanceValue().getId(),
-      FieldId.of("d"),
+      version.getItemDef().getQuantityField(),
       InstanceValue.of(newQuantity)
     );
   }
 
-  public Set<ItemType> findItemTypes() {
+  public Set<ItemType> findItemTypes(MinecraftVersion version) {
     return this.classInstanceService
-      .scanAndGetValues(ClassId.of("bei"))
+      .scanAndGetValues(version.getItemTypeDef().getClassId())
       .stream()
       .map(ItemType::of)
       .collect(Collectors.toSet())
