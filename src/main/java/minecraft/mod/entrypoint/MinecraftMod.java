@@ -23,7 +23,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
-import minecraft.mod.Version;
+import minecraft.mod.VersionDefs;
 
 import org.apache.commons.lang3.Validate;
 
@@ -88,7 +88,7 @@ public class MinecraftMod {
   @Deprecated
   void populateVersions() {
     this.minecraftVersion.removeAllItems();
-    for (Version value : Version.values()) {
+    for (VersionDefs value : VersionDefs.values()) {
       this.minecraftVersion.addItem(MinecraftVersionComboItem.of(value));
     }
   }

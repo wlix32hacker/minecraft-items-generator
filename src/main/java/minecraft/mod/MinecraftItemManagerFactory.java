@@ -20,7 +20,7 @@ public class MinecraftItemManagerFactory {
     this.minecraftVersionService = minecraftVersionService;
   }
 
-  public MinecraftItemManager getInstance(Version version){
+  public MinecraftItemManager getInstance(VersionDefs version){
     return new MinecraftItemManager1_14Plus(this.classInstanceService, version);
   }
 

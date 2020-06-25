@@ -2,15 +2,15 @@ package minecraft.mod.entrypoint;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import minecraft.mod.Version;
+import minecraft.mod.VersionDefs;
 
 @Value
 @EqualsAndHashCode(of = "minecraftVersion")
 public class MinecraftVersionComboItem {
 
-  Version version;
+  VersionDefs version;
 
-  public static MinecraftVersionComboItem of(Version version) {
+  public static MinecraftVersionComboItem of(VersionDefs version) {
     return new MinecraftVersionComboItem(version);
   }
 

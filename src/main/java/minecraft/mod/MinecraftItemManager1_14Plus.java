@@ -14,10 +14,10 @@ import com.mageddo.ramspiderjava.InstanceValue;
 public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
 
   private final ClassInstanceService classInstanceService;
-  private final Version version;
+  private final VersionDefs version;
 
   @Inject
-  public MinecraftItemManager1_14Plus(ClassInstanceService classInstanceService, Version version) {
+  public MinecraftItemManager1_14Plus(ClassInstanceService classInstanceService, VersionDefs version) {
     this.classInstanceService = classInstanceService;
     this.version = version;
   }

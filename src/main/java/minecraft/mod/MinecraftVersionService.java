@@ -21,7 +21,7 @@ public class MinecraftVersionService {
     this.resourceService = resourceService;
   }
 
-  public Version findMinecraftVersion(){
+  public VersionDefs findMinecraftVersion(){
     throw new UnsupportedOperationException();
   }
 
