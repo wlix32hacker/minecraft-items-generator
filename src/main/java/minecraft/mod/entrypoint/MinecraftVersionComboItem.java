@@ -2,7 +2,7 @@ package minecraft.mod.entrypoint;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import minecraft.mod.VersionDefs;
+import minecraft.mod.clientinfo.VersionDefs;
 
 @Value
 @EqualsAndHashCode(of = "version")

@@ -3,7 +3,7 @@ package minecraft.mod.classmapping;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import minecraft.mod.VersionDefs;
+import minecraft.mod.clientinfo.VersionDefs;
 
 @Singleton
 public class ClassMappingsServiceCached implements ClassMappingsService {

@@ -7,9 +7,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import minecraft.mod.ClientInfoService;
-import minecraft.mod.MinecraftVersionService;
-import minecraft.mod.VersionDefs;
+import minecraft.mod.clientinfo.ClientInfoService;
+import minecraft.mod.clientinfo.VersionInfoService;
+import minecraft.mod.clientinfo.VersionDefs;
 import minecraft.parser.antlr.classmap.MinecraftClassMapLexer;
 import minecraft.parser.antlr.classmap.MinecraftClassMapParser;
 
@@ -17,15 +17,15 @@ import minecraft.parser.antlr.classmap.MinecraftClassMapParser;
 public class ClassMappingsServiceDefault implements ClassMappingsService {
 
   private final ClientInfoService clientInfoService;
-  private final MinecraftVersionService minecraftVersionService;
+  private final VersionInfoService versionInfoService;
 
   @Inject
   public ClassMappingsServiceDefault(
       ClientInfoService clientInfoService,
-      MinecraftVersionService minecraftVersionService
+      VersionInfoService versionInfoService
   ) {
     this.clientInfoService = clientInfoService;
-    this.minecraftVersionService = minecraftVersionService;
+    this.versionInfoService = versionInfoService;
   }
 
   public ClassMappingsListener findFieldMappings() {
@@ -43,6 +43,6 @@ public class ClassMappingsServiceDefault implements ClassMappingsService {
   }
 
   public VersionDefs findVersionDefs(){
-    return VersionDefs.of(this.minecraftVersionService.getGameVersion(), this.findFieldMappings());
+    return VersionDefs.of(this.versionInfoService.getGameVersion(), this.findFieldMappings());
   }
 }

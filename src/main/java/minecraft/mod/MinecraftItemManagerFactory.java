@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 import com.mageddo.ramspiderjava.ClassInstanceService;
 
 import minecraft.mod.classmapping.ClassMappingsService;
+import minecraft.mod.clientinfo.VersionDefs;
 
 @Singleton
 public class MinecraftItemManagerFactory {

@@ -1,4 +1,4 @@
-package minecraft.mod;
+package minecraft.mod.clientinfo;
 
 import com.mageddo.ramspiderjava.ClassId;
 import com.mageddo.ramspiderjava.FieldId;

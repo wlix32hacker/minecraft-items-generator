@@ -1,22 +1,21 @@
-package minecraft.mod;
+package minecraft.mod.clientinfo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.mageddo.ramspiderjava.ResourceService;
 
 import lombok.SneakyThrows;
 
 @Singleton
-public class MinecraftVersionService {
+public class VersionInfoService {
 
   private final ObjectMapper objectMapper;
   private final ResourceService resourceService;
 
   @Inject
-  public MinecraftVersionService(ObjectMapper objectMapper, ResourceService resourceService) {
+  public VersionInfoService(ObjectMapper objectMapper, ResourceService resourceService) {
     this.objectMapper = objectMapper;
     this.resourceService = resourceService;
   }

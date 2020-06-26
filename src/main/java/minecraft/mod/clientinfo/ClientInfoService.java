@@ -1,4 +1,4 @@
-package minecraft.mod;
+package minecraft.mod.clientinfo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,17 +22,17 @@ public class ClientInfoService {
 
   private final ObjectMapper objectMapper;
   private final OkHttpClient okHttpClient;
-  private final MinecraftVersionService minecraftVersionService;
+  private final VersionInfoService versionInfoService;
 
   @Inject
   public ClientInfoService(
       ObjectMapper objectMapper,
       OkHttpClient okHttpClient,
-      MinecraftVersionService minecraftVersionService
+      VersionInfoService versionInfoService
   ) {
     this.objectMapper = objectMapper;
     this.okHttpClient = okHttpClient;
-    this.minecraftVersionService = minecraftVersionService;
+    this.versionInfoService = versionInfoService;
   }
 
   @SneakyThrows
@@ -69,7 +69,7 @@ public class ClientInfoService {
   }
 
   GameVersion getVersion() {
-    return this.minecraftVersionService.getGameVersion();
+    return this.versionInfoService.getGameVersion();
   }
 
   Path getClientInfoPath(GameVersion version) {

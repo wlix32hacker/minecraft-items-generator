@@ -10,6 +10,8 @@ import javax.inject.Singleton;
 import com.mageddo.ramspiderjava.ClassInstanceService;
 import com.mageddo.ramspiderjava.InstanceValue;
 
+import minecraft.mod.clientinfo.VersionDefs;
+
 @Singleton
 public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
 
