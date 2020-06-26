@@ -34,15 +34,6 @@ dependencies {
   testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
 }
 
-jar {
-  manifest {
-    attributes(
-        "Main-Class": "minecraft.mod.entrypoint.MinecraftMod",
-        "Agent-Class": "com.mageddo.ramspiderjava.agent.ClassAgent"
-    )
-  }
-}
-
 configurations {
   compile {
     extendsFrom = extendsFrom.findAll { it != configurations.antlr }
@@ -54,4 +45,17 @@ test {
   testLogging {
     events "skipped", "failed"
   }
+}
+
+jar {
+  manifest {
+    attributes(
+        "Main-Class": "minecraft.mod.entrypoint.MinecraftMod",
+        "Agent-Class": "com.mageddo.ramspiderjava.agent.ClassAgent"
+    )
+  }
+}
+
+shadowJar {
+
 }
