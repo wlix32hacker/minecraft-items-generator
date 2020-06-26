@@ -79,7 +79,7 @@ public class MinecraftMod {
           .create()
           .findAndAttachToRunning();
 
-      this.foundPid.setText(String.format("pid: 0x%x/%d ", minecraft.pid(), minecraft.pid()));
+      this.foundPid.setText(String.format("pid: 0x%x / %d ", minecraft.pid(), minecraft.pid()));
       this.minecraftVersionLbl.setText(
           " version: " + this.minecraft
               .classMappingsService()
