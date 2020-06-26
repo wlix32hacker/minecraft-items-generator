@@ -1,34 +1,27 @@
 package minecraft.mod;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.mageddo.coc.CocModule;
 import com.mageddo.coc.Window;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
 import com.mageddo.ramspiderjava.client.di.HttpClientModule;
 
-import lombok.extern.slf4j.Slf4j;
+import dagger.Component;
 import minecraft.mod.Minecraft.PidModule;
 
-@Slf4j
 @Singleton
-public class MinecraftAttache {
+@Component(modules = CocModule.class)
+public interface MinecraftAttache {
 
-  private final MinecraftProcessFinder minecraftProcessFinder;
+  MinecraftProcessFinder minecraftProcessFinder();
 
-  @Inject
-  public MinecraftAttache(MinecraftProcessFinder minecraftProcessFinder) {
-    this.minecraftProcessFinder = minecraftProcessFinder;
-  }
-
-  public Minecraft findAndAttachToRunning(){
-    final Window minecraftWindow = this.minecraftProcessFinder.find();
+  default Minecraft findAndAttachToRunning(){
+    final Window minecraftWindow = minecraftProcessFinder().find();
     if(minecraftWindow == null){
       throw new IllegalStateException("Minecraft wasn't found, is it running?");
     }
-    log.info("attaching-to={}", minecraftWindow);
     JavaRamSpider.attach(minecraftWindow.pid());
-    log.info("status=attached!");
     return DaggerMinecraft
         .builder()
         .httpClientModule(new HttpClientModule(minecraftWindow.pid()))
@@ -37,10 +30,7 @@ public class MinecraftAttache {
         ;
   }
 
-  public static MinecraftAttache create(){
-    return DaggerMinecraftModFactory
-        .create()
-        .minecraftMod()
-        ;
+  static MinecraftAttache create(){
+    return DaggerMinecraftAttache.create();
   }
 }
