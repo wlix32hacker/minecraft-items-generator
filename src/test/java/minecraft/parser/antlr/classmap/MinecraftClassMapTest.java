@@ -19,31 +19,54 @@ public class MinecraftClassMapTest {
   @Test
   void mustParseClassAndFields(){
     // arrange
+    final List<String> comments = new ArrayList<>();
+    final List<String> fields = new ArrayList<>();
 
     final MinecraftClassMapParser parser = this.createParser("/example03.txt");
 
     // act
     final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
+
+      private String clazz;
+
       public void enterComment(MinecraftClassMapParser.CommentContext ctx) {
+        comments.add(ctx.getText());
         System.out.println("comment: " + ctx.getText());
       }
+
       public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
-        final String classDef = String.format(
+        this.clazz = String.format(
             "%s:%s",
             ctx.classSignature().classDefOriginalName()
                 .getText(),
             ctx.classSignature().classDefObfuscatedName()
                 .getText()
         );
-        System.out.println("classDef: " + classDef);
+        System.out.println("classDef: " + clazz);
       }
 
-//      @Override
-//      public void enterClassBodyStm(MinecraftClassMapParser.ClassBodyStmContext ctx) {
-//        System.out.println("classBodyStm: " + ctx.getText());
-//      }
+      public void enterClassBodyStm(MinecraftClassMapParser.ClassBodyStmContext ctx) {
+        System.out.println("  classBodyStm: " + ctx.getText());
+      }
+
+      public void enterVariableDef(MinecraftClassMapParser.VariableDefContext ctx) {
+        final String variable = String.format(
+            "%s(%s:%s)",
+            this.clazz,
+            ctx.variableOriginalName().getText(),
+            ctx.variableObfuscatedName().getText()
+        );
+        fields.add(variable);
+        System.out.println("    variable: " + variable);
+      }
     };
     ParseTreeWalker.DEFAULT.walk(listener, parser.parse());
+
+    // assert
+    assertEquals("[# some comment]", comments.toString());
+    assertEquals("net.minecraft.world.item.ItemPropertyFunction:bem(name:a)", fields.get(0));
+    assertEquals("net.minecraft.world.item.ItemStack:ben(count:d)", fields.get(1));
+    assertEquals("net.minecraft.world.item.ItemStack:ben(item:f)", fields.get(2));
   }
 
   @SneakyThrows

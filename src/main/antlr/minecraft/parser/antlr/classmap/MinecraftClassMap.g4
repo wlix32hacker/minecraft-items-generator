@@ -20,21 +20,8 @@ comment
 
 classDef
   : classSignature
-//  | classSignature classBodyDef
+  | classSignature classBodyDef
   ;
-
-classSignature
-  : classDefOriginalName ' -> ' classDefObfuscatedName ':'
-  ;
-
-//classBodyDef
-//  : NL '    ' classBodyStm
-//  : NL '    ' classBodyStm (NL '    ' classBodyStm)*
-//  ;
-
-//classBodyStm
-//  : NAME_SPACE ' '+ VAR_NAME ' '+ '->' ' '+ VAR_NAME
-//  ;
 
 classDefObfuscatedName
   : nameSpace
@@ -42,6 +29,30 @@ classDefObfuscatedName
 
 classDefOriginalName
   : nameSpace
+  ;
+
+classSignature
+  : classDefOriginalName ' -> ' classDefObfuscatedName ':'
+  ;
+
+classBodyDef
+  : (NL '    ' classBodyStm)*
+  ;
+
+classBodyStm
+  : variableDef
+  ;
+
+variableDef
+  : nameSpace ' ' variableOriginalName ' -> ' variableObfuscatedName
+  ;
+
+variableOriginalName
+  : NAME
+  ;
+
+variableObfuscatedName
+  : NAME
   ;
 
 nameSpace
