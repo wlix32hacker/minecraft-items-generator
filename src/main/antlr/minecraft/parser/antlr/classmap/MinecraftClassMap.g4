@@ -19,14 +19,32 @@ comment
   ;
 
 classDef
-  : CLASSDEF
+  : classDefOringinalName ' -> ' classDefObfuscatedName ':'
   ;
 
-CLASSDEF
-  : (~[ \r\n])+ ' -> ' (~[ \r\n])+ ':'
+classDefObfuscatedName
+  : NAME_SPACE
+  ;
+
+classDefOringinalName
+  : NAME_SPACE
+  ;
+
+//WHITESPACE: ' '*;
+
+//CLASSDEF
+//  : (~[ \r\n])+ ' -> ' (~[ \r\n])+ ':'
 //  : ~ [ ]
 //  net.minecraft.world.item.ItemStack -> ben:
+//  ;
+
+NAME_SPACE
+  : ([a-zA-Z0-9_\\.])+
   ;
+
+//CLASS_DEF_ORIGINAL_NAME
+//  : (~[ \r\n])+ ' '* '->' ' '*
+//  ;
 
 SINGLE_LINE_COMMENT
    : '#' (LINE_TEXT)+

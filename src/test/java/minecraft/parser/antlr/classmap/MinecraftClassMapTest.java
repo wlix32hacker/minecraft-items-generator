@@ -22,7 +22,11 @@ public class MinecraftClassMapTest {
     final MinecraftClassMapParser parser = this.createParser("/example02.txt");
     final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
       public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
-        System.out.printf("classDef: %s%n", ctx.getText() + ":");
+        System.out.printf(
+            "classDef: source=%s, target=%s%n",
+            ctx.classDefOringinalName().getText(),
+            ctx.classDefObfuscatedName().getText()
+        );
       }
     };
     ParseTreeWalker.DEFAULT.walk(listener, parser.parse());
