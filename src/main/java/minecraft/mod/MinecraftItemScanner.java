@@ -7,35 +7,31 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.mageddo.ramspiderjava.ClassId;
-import com.mageddo.ramspiderjava.ClassInstanceService;
-import com.mageddo.ramspiderjava.FieldId;
-import com.mageddo.ramspiderjava.InstanceValue;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Singleton
 public class MinecraftItemScanner {
 
-  private final ClassInstanceService classInstanceService;
+  private final MinecraftItemManagerFactory itemManagerFactory;
 
   @Inject
-  public MinecraftItemScanner(ClassInstanceService classInstanceService) {
-    this.classInstanceService = classInstanceService;
+  public MinecraftItemScanner(MinecraftItemManagerFactory itemManagerFactory) {
+    this.itemManagerFactory = itemManagerFactory;
   }
 
   /**
    * Get all minecraft items loaded at the game just now
    */
   public List<Item> findItems() {
-    return this.classInstanceService
-      .scanAndGetValues(ClassId.of("ben"))
-      .stream()
-      .map(Item::from)
-      .filter(it -> it.getQuantity() > 0)
-      .collect(Collectors.toList())
-      ;
+    final List<Item> items = this.getManager()
+        .findItems();
+    log.info("searching in {} items", items.size());
+    return items;
+  }
+
+  public Set<ItemType> findItemTypes() {
+    return this.getManager().findItemTypes();
   }
 
   public List<Item> findItems(ItemType itemType, int quantity) {
@@ -58,7 +54,7 @@ public class MinecraftItemScanner {
     return items.size();
   }
 
-  public int findAndChange(ItemType itemType, int quantity, int newQuantity, ItemType newItemType) {
+  public int findAndChange(ItemType itemType, int quantity, ItemType newItemType, int newQuantity) {
     final List<Item> items = this.findItems(itemType, quantity);
     items.forEach(it -> {
       try {
@@ -73,36 +69,23 @@ public class MinecraftItemScanner {
     return items.size();
   }
 
+  public ItemType filterType(Set<ItemType> types, String itemTypeCode) {
+    return types
+        .stream()
+        .filter(it -> it.getName().equals(itemTypeCode))
+        .findFirst()
+        .get();
+  }
+
   void changeType(Item item, ItemType itemType) {
-    this.classInstanceService.setFieldValue(
-      item.getInstanceValue().getId(),
-      FieldId.of("f"),
-      InstanceValue.of(itemType.getInstance().getId())
-    );
+    this.getManager().changeType(item, itemType);
   }
 
   void changeQuantity(Item item, int newQuantity) {
-    this.classInstanceService.setFieldValue(
-      item.getInstanceValue().getId(),
-      FieldId.of("d"),
-      InstanceValue.of(newQuantity)
-    );
+    this.getManager().changeQuantity(item, newQuantity);
   }
 
-  public Set<ItemType> findItemTypes() {
-    return this.classInstanceService
-      .scanAndGetValues(ClassId.of("bei"))
-      .stream()
-      .map(ItemType::of)
-      .collect(Collectors.toSet())
-      ;
-  }
-
-  public ItemType filterType(Set<ItemType> types, String itemTypeCode) {
-    return types
-      .stream()
-      .filter(it -> it.getName().equals(itemTypeCode))
-      .findFirst()
-      .get();
+  MinecraftItemManager getManager() {
+    return this.itemManagerFactory.getInstance();
   }
 }

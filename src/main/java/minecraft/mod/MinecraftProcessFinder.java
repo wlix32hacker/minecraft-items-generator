@@ -20,9 +20,10 @@ public class MinecraftProcessFinder {
     return this.windowDAO
         .findWindows()
         .stream()
-        .filter(it -> it.name().matches("^Minecraft \\d+\\.\\d+\\.\\d+.*"))
+        .filter(it -> it.name().matches("^Minecraft \\d+\\.\\d+(\\.\\d)*.*"))
         .findFirst()
         .orElse(null)
     ;
   }
+
 }

@@ -1,0 +1,6 @@
+# some comment
+net.minecraft.world.item.ItemPropertyFunction -> bem:
+    int name -> a
+net.minecraft.world.item.ItemStack -> ben:
+    int count -> d
+    net.minecraft.world.item.Item item -> f

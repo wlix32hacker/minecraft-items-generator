@@ -1,5 +1,6 @@
 plugins {
   id "java"
+  id "antlr"
   id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
@@ -24,8 +25,13 @@ dependencies {
   implementation("com.intellij:forms_rt:7.0.3")
   implementation("com.mageddo.ramspider:ram-spider-java:1.0.1")
 
+  antlr("org.antlr:antlr4:4.7.2")
+  implementation("org.antlr:antlr4-runtime:4.7.2")
+
   testCompileOnly "org.projectlombok:lombok:1.18.12"
   testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+  testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
 }
 
 jar {
@@ -34,5 +40,18 @@ jar {
         "Main-Class": "minecraft.mod.entrypoint.MinecraftMod",
         "Agent-Class": "com.mageddo.ramspiderjava.agent.ClassAgent"
     )
+  }
+}
+
+configurations {
+  compile {
+    extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+  }
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "skipped", "failed"
   }
 }

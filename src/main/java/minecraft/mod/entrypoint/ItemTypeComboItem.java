@@ -1,10 +1,9 @@
 package minecraft.mod.entrypoint;
 
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
+
 import lombok.Value;
 import minecraft.mod.ItemType;
-
-import java.util.Objects;
 
 @Value
 public class ItemTypeComboItem {
