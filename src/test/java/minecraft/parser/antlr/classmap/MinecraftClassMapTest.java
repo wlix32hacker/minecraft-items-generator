@@ -1,6 +1,8 @@
 package minecraft.parser.antlr.classmap;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -19,17 +21,37 @@ public class MinecraftClassMapTest {
   @SneakyThrows
   @Test
   void mustParseClasses(){
+    // arrange
+    List<String> classes = new ArrayList<>();
+    List<String> comments = new ArrayList<>();
     final MinecraftClassMapParser parser = this.createParser("/example02.txt");
+
+    // act
     final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
+      public void enterComment(MinecraftClassMapParser.CommentContext ctx) {
+        comments.add(ctx.getText());
+      }
+
       public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
-        System.out.printf(
-            "classDef: source=%s, target=%s%n",
-            ctx.classDefOringinalName().getText(),
-            ctx.classDefObfuscatedName().getText()
+        final String classDef = String.format(
+            "%s:%s",
+            ctx.classDefOringinalName()
+                .getText(),
+            ctx.classDefObfuscatedName()
+                .getText()
         );
+        System.out.println(classDef);
+        classes.add(classDef);
       }
     };
     ParseTreeWalker.DEFAULT.walk(listener, parser.parse());
+
+    // assert
+    assertEquals(
+        "[net.minecraft.world.item.ItemPropertyFunction:bem, net.minecraft.world.item.ItemStack:ben]",
+        classes.toString()
+    );
+    assertEquals("[# some comment]", comments.toString());
   }
 
   @SneakyThrows
