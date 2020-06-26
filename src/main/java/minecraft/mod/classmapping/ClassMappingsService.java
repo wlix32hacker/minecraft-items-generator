@@ -1,8 +1,5 @@
 package minecraft.mod.classmapping;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -10,7 +7,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import lombok.SneakyThrows;
 import minecraft.mod.ClientInfoService;
 import minecraft.mod.MinecraftVersionService;
 import minecraft.mod.VersionDefs;
@@ -44,17 +40,6 @@ public class ClassMappingsService {
     final ClassMappingsListener mappingsListener = new ClassMappingsListener();
     ParseTreeWalker.DEFAULT.walk(mappingsListener, parser.parse());
     return mappingsListener;
-  }
-
-  @SneakyThrows
-  public static void main(String[] args) {
-
-    final String clientText = new String(Files.readAllBytes(Paths.get(
-        "H:\\jogos-com-backup\\client-1.15.2.txt"
-    )));
-    final ClassMappingsListener fieldMappings = findFieldMappings(clientText);
-
-    System.out.println(VersionDefs.of(null, fieldMappings));
   }
 
   public VersionDefs findVersionDefs(){

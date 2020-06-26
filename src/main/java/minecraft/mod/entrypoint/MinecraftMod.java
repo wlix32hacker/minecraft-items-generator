@@ -98,14 +98,9 @@ public class MinecraftMod {
           .findAndAttachToRunning();
 
       this.foundPid.setText(String.format("( 0x%x/%d )", minecraft.pid(), minecraft.pid()));
-
-      System.out.println(this.minecraft.classMappingsService()
-          .findVersionDefs());
-      return;
-
-//      this.setItemTypes();
-//      this.findAndChangeButton.setEnabled(true);
-//      log.warn("minecraft version");
+      this.setItemTypes();
+      this.findAndChangeButton.setEnabled(true);
+      log.warn("minecraft version");
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
