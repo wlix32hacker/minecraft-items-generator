@@ -18,20 +18,20 @@ public class VersionDefs {
   public static VersionDefs of(GameVersion version, ClassMappingsListener mappingsListener) {
 
     final String itemClassName = "net.minecraft.world.item.ItemStack";
-    final FieldMapping quantity = mappingsListener.getField(itemClassName, "count");
-    final FieldMapping type = mappingsListener.getField(itemClassName, "item");
+    final FieldMapping itemQuantity = mappingsListener.getField(itemClassName, "count");
+    final FieldMapping itemType = mappingsListener.getField(itemClassName, "item");
 
     return new VersionDefs(
         version,
         ItemDef
             .builder()
-            .classId(ClassId.of(quantity.getObfuscatedType()))
-            .quantityField(FieldId.of(quantity.getObfuscatedName()))
-            .itemTypeField(FieldId.of(type.getObfuscatedName()))
+            .classId(ClassId.of(mappingsListener.toObfuscatedClassName(itemClassName)))
+            .quantityField(FieldId.of(itemQuantity.getObfuscatedName()))
+            .itemTypeField(FieldId.of(itemType.getObfuscatedName()))
             .build(),
         ItemTypeDef
             .builder()
-            .classId(ClassId.of(mappingsListener.getObfuscatedClassName(type.getTypeName())))
+            .classId(ClassId.of(mappingsListener.toObfuscatedClassName(itemType.getTypeName())))
             .build()
     );
   }

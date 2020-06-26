@@ -86,7 +86,7 @@ nameSpace
   ;
 
 NAME
-  : [A-Za-z_$][a-zA-Z0-9_$]*
+  : [A-Za-z_$][a-zA-Z0-9_\-$\\[\]]*
   ;
 
 INTEGER

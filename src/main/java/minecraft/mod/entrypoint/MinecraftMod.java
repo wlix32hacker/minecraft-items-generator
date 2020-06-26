@@ -103,9 +103,9 @@ public class MinecraftMod {
           .findVersionDefs());
       return;
 
-      this.setItemTypes();
-      this.findAndChangeButton.setEnabled(true);
-      log.warn("minecraft version");
+//      this.setItemTypes();
+//      this.findAndChangeButton.setEnabled(true);
+//      log.warn("minecraft version");
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());

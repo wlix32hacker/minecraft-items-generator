@@ -12,6 +12,7 @@ public class ClassMappingsListener extends MinecraftClassMapBaseListener {
 
   private final Map<String, String> classBindings;
   private final Map<String, List<FieldMapping>> classFieldsBindings;
+  private String currentClassName;
 
   public ClassMappingsListener() {
     this.classBindings = new HashMap<>();
@@ -20,21 +21,24 @@ public class ClassMappingsListener extends MinecraftClassMapBaseListener {
 
   @Override
   public void enterClassSignature(MinecraftClassMapParser.ClassSignatureContext ctx) {
-    this.classBindings.put(ctx.classDefOriginalName()
-        .getText(), ctx.classDefObfuscatedName()
-        .getText());
+    this.currentClassName = ctx
+        .classDefOriginalName()
+        .getText();
+    this.classBindings.put(
+        this.currentClassName,
+        ctx.classDefObfuscatedName()
+            .getText()
+    );
   }
 
   @Override
   public void enterVariableDef(MinecraftClassMapParser.VariableDefContext ctx) {
-    final String fieldClassName = ctx
-        .nameSpace()
-        .getText();
-    if (!this.classFieldsBindings.containsKey(fieldClassName)) {
-      this.classFieldsBindings.put(fieldClassName, new ArrayList<>());
+    final String fieldClassName = ctx.nameSpace().getText();
+    if (!this.classFieldsBindings.containsKey(this.currentClassName)) {
+      this.classFieldsBindings.put(this.currentClassName, new ArrayList<>());
     }
     this.classFieldsBindings
-        .get(fieldClassName)
+        .get(this.currentClassName)
         .add(FieldMapping
             .builder()
             .name(ctx
@@ -46,25 +50,26 @@ public class ClassMappingsListener extends MinecraftClassMapBaseListener {
                 .getText()
             )
             .typeName(fieldClassName)
-            .obfuscatedType(this.classBindings.get(fieldClassName))
+            .obfuscatedType(this.toObfuscatedClassName(fieldClassName))
             .build()
         );
   }
 
-  public List<FieldMapping> getClassFields(String clazzName){
+  public List<FieldMapping> getClassFields(String clazzName) {
     return this.classFieldsBindings.get(clazzName);
   }
 
-  public FieldMapping getField(String className, String fieldName){
+  public FieldMapping getField(String className, String fieldName) {
     return this
         .getClassFields(className)
         .stream()
-        .filter(it -> it.getName().equals(fieldName))
+        .filter(it -> it.getName()
+            .equals(fieldName))
         .findFirst()
         .get();
   }
 
-  public String getObfuscatedClassName(String className) {
+  public String toObfuscatedClassName(String className) {
     return this.classBindings.get(className);
   }
 }

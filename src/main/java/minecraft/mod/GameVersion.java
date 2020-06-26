@@ -1,8 +1,11 @@
 package minecraft.mod;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GameVersion {
 
   private String id;
