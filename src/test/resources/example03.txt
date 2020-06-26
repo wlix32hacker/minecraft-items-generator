@@ -1,11 +1,6 @@
 # some comment
 net.minecraft.world.item.ItemPropertyFunction -> bem:
-    float call(net.minecraft.world.item.ItemStack,net.minecraft.world.level.Level,net.minecraft.world.entity.LivingEntity) -> call
+    int name -> a
 net.minecraft.world.item.ItemStack -> ben:
     int count -> d
     net.minecraft.world.item.Item item -> f
-    net.minecraft.nbt.CompoundTag tag -> g
-    107:109:java.text.DecimalFormat getAttributeDecimalFormat() -> H
-    113:114:void <init>(net.minecraft.world.level.ItemLike) -> <init>
-    116:125:void <init>(net.minecraft.world.level.ItemLike,int) -> <init>
-

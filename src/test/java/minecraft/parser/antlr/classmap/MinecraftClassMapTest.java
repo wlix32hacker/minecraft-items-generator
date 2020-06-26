@@ -16,14 +16,42 @@ import static testing.TestUtils.getResourceAsStream;
 
 public class MinecraftClassMapTest {
 
-//  void mustParseClassAndFields(){
+  @Test
+  void mustParseClassAndFields(){
+    // arrange
+
+    final MinecraftClassMapParser parser = this.createParser("/example03.txt");
+
+    // act
+    final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
+      public void enterComment(MinecraftClassMapParser.CommentContext ctx) {
+        System.out.println("comment: " + ctx.getText());
+      }
+      public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
+        final String classDef = String.format(
+            "%s:%s",
+            ctx.classSignature().classDefOriginalName()
+                .getText(),
+            ctx.classSignature().classDefObfuscatedName()
+                .getText()
+        );
+        System.out.println("classDef: " + classDef);
+      }
+
+//      @Override
+//      public void enterClassBodyStm(MinecraftClassMapParser.ClassBodyStmContext ctx) {
+//        System.out.println("classBodyStm: " + ctx.getText());
+//      }
+    };
+    ParseTreeWalker.DEFAULT.walk(listener, parser.parse());
+  }
 
   @SneakyThrows
   @Test
   void mustParseClasses(){
     // arrange
-    List<String> classes = new ArrayList<>();
-    List<String> comments = new ArrayList<>();
+    final List<String> classes = new ArrayList<>();
+    final List<String> comments = new ArrayList<>();
     final MinecraftClassMapParser parser = this.createParser("/example02.txt");
 
     // act
@@ -35,12 +63,12 @@ public class MinecraftClassMapTest {
       public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
         final String classDef = String.format(
             "%s:%s",
-            ctx.classDefOringinalName()
+            ctx.classSignature().classDefOriginalName()
                 .getText(),
-            ctx.classDefObfuscatedName()
+            ctx.classSignature().classDefObfuscatedName()
                 .getText()
         );
-        System.out.println(classDef);
+        System.out.println("classDef: " + classDef);
         classes.add(classDef);
       }
     };

@@ -19,22 +19,40 @@ comment
   ;
 
 classDef
-  : classDefOringinalName ' '* '->' ' '* classDefObfuscatedName ':' ' '*
+  : classSignature
+//  | classSignature classBodyDef
   ;
+
+classSignature
+  : classDefOriginalName ' -> ' classDefObfuscatedName ':'
+  ;
+
+//classBodyDef
+//  : NL '    ' classBodyStm
+//  : NL '    ' classBodyStm (NL '    ' classBodyStm)*
+//  ;
+
+//classBodyStm
+//  : NAME_SPACE ' '+ VAR_NAME ' '+ '->' ' '+ VAR_NAME
+//  ;
 
 classDefObfuscatedName
-  : NAME_SPACE
+  : nameSpace
   ;
 
-classDefOringinalName
-  : NAME_SPACE
+classDefOriginalName
+  : nameSpace
   ;
 
-fragment WHITESPACE: ' '*;
-
-NAME_SPACE
-  : ([a-zA-Z0-9_\\.])+
+nameSpace
+  : NAME ('.' NAME)*
   ;
+
+
+NAME
+  : [A-Za-z_$][a-zA-Z0-9_$]*
+  ;
+
 
 SINGLE_LINE_COMMENT
    : '#' (LINE_TEXT)+
