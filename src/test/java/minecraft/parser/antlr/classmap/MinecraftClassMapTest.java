@@ -33,9 +33,7 @@ public class MinecraftClassMapTest {
 
     // assert
     assertEquals("[# some comment]", comments.toString());
-    assertEquals("net.minecraft.world.item.ItemPropertyFunction:bem(name:a)", fields.get(0));
-    assertEquals("net.minecraft.world.item.ItemStack:ben(count:d)", fields.get(1));
-    assertEquals("net.minecraft.world.item.ItemStack:ben(item:f)", fields.get(2));
+    assertEquals("net.minecraft.world.item.ItemStack:ben(tag:g)", fields.get(0));
   }
 
   @Test

@@ -41,6 +41,7 @@ classBodyDef
 
 classBodyStm
   : variableDef
+  | methodDef
   ;
 
 variableDef
@@ -53,6 +54,18 @@ variableOriginalName
 
 variableObfuscatedName
   : NAME
+  ;
+
+methodDef
+  : nameSpace ' ' NAME '(' methodDefArgs ')' ' -> ' nameSpace
+  ;
+
+methodDefArgs
+  : methodArg* (',' methodArg)*
+  ;
+
+methodArg
+  : nameSpace
   ;
 
 nameSpace
