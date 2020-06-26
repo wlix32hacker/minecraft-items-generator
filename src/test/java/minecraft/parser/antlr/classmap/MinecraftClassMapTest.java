@@ -17,7 +17,29 @@ import static testing.TestUtils.getResourceAsStream;
 public class MinecraftClassMapTest {
 
   @Test
-  void mustParseClassAndFields(){
+  void mustParseClassAndFieldsAndMethods() {
+    // arrange
+    final List<String> comments = new ArrayList<>();
+    final List<String> fields = new ArrayList<>();
+    final List<String> methods = new ArrayList<>();
+
+    final MinecraftClassMapParser parser = this.createParser("/example04.txt");
+
+    // act
+    ParseTreeWalker.DEFAULT.walk(
+        new ClassAndFieldsAndMethodsListener(comments, fields, methods),
+        parser.parse()
+    );
+
+    // assert
+    assertEquals("[# some comment]", comments.toString());
+    assertEquals("net.minecraft.world.item.ItemPropertyFunction:bem(name:a)", fields.get(0));
+    assertEquals("net.minecraft.world.item.ItemStack:ben(count:d)", fields.get(1));
+    assertEquals("net.minecraft.world.item.ItemStack:ben(item:f)", fields.get(2));
+  }
+
+  @Test
+  void mustParseClassAndFields() {
     // arrange
     final List<String> comments = new ArrayList<>();
     final List<String> fields = new ArrayList<>();
@@ -25,42 +47,7 @@ public class MinecraftClassMapTest {
     final MinecraftClassMapParser parser = this.createParser("/example03.txt");
 
     // act
-    final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
-
-      private String clazz;
-
-      public void enterComment(MinecraftClassMapParser.CommentContext ctx) {
-        comments.add(ctx.getText());
-        System.out.println("comment: " + ctx.getText());
-      }
-
-      public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
-        this.clazz = String.format(
-            "%s:%s",
-            ctx.classSignature().classDefOriginalName()
-                .getText(),
-            ctx.classSignature().classDefObfuscatedName()
-                .getText()
-        );
-        System.out.println("classDef: " + clazz);
-      }
-
-      public void enterClassBodyStm(MinecraftClassMapParser.ClassBodyStmContext ctx) {
-        System.out.println("  classBodyStm: " + ctx.getText());
-      }
-
-      public void enterVariableDef(MinecraftClassMapParser.VariableDefContext ctx) {
-        final String variable = String.format(
-            "%s(%s:%s)",
-            this.clazz,
-            ctx.variableOriginalName().getText(),
-            ctx.variableObfuscatedName().getText()
-        );
-        fields.add(variable);
-        System.out.println("    variable: " + variable);
-      }
-    };
-    ParseTreeWalker.DEFAULT.walk(listener, parser.parse());
+    ParseTreeWalker.DEFAULT.walk(new ClassAndFieldsListener(comments, fields), parser.parse());
 
     // assert
     assertEquals("[# some comment]", comments.toString());
@@ -71,31 +58,14 @@ public class MinecraftClassMapTest {
 
   @SneakyThrows
   @Test
-  void mustParseClasses(){
+  void mustParseClasses() {
     // arrange
     final List<String> classes = new ArrayList<>();
     final List<String> comments = new ArrayList<>();
     final MinecraftClassMapParser parser = this.createParser("/example02.txt");
 
     // act
-    final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
-      public void enterComment(MinecraftClassMapParser.CommentContext ctx) {
-        comments.add(ctx.getText());
-      }
-
-      public void enterClassDef(MinecraftClassMapParser.ClassDefContext ctx) {
-        final String classDef = String.format(
-            "%s:%s",
-            ctx.classSignature().classDefOriginalName()
-                .getText(),
-            ctx.classSignature().classDefObfuscatedName()
-                .getText()
-        );
-        System.out.println("classDef: " + classDef);
-        classes.add(classDef);
-      }
-    };
-    ParseTreeWalker.DEFAULT.walk(listener, parser.parse());
+    ParseTreeWalker.DEFAULT.walk(new ClassListener(comments, classes), parser.parse());
 
     // assert
     assertEquals(
@@ -107,13 +77,13 @@ public class MinecraftClassMapTest {
 
   @SneakyThrows
   @Test
-  void mustParseComments(){
+  void mustParseComments() {
     // arrange
 
     // act
     final MinecraftClassMapParser parser = this.createParser("/example01.txt");
 
-    final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener(){
+    final MinecraftClassMapBaseListener listener = new MinecraftClassMapBaseListener() {
       public void enterComment(MinecraftClassMapParser.CommentContext ctx) {
         assertEquals("# xpto abc", ctx.getText());
       }
