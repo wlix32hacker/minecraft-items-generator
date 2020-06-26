@@ -5,10 +5,10 @@ import javax.inject.Singleton;
 
 import com.mageddo.coc.Window;
 import com.mageddo.ramspiderjava.client.JavaRamSpider;
-
 import com.mageddo.ramspiderjava.client.di.HttpClientModule;
 
 import lombok.extern.slf4j.Slf4j;
+import minecraft.mod.Minecraft.PidModule;
 
 @Slf4j
 @Singleton
@@ -32,7 +32,7 @@ public class MinecraftAttache {
     return DaggerMinecraft
         .builder()
         .httpClientModule(new HttpClientModule(minecraftWindow.pid()))
-        .minecraftModule(new MinecraftModule(minecraftWindow.pid()))
+        .pidModule(new PidModule(minecraftWindow.pid()))
         .build()
         ;
   }

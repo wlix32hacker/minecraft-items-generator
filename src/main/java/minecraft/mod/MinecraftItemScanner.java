@@ -24,7 +24,10 @@ public class MinecraftItemScanner {
    * Get all minecraft items loaded at the game just now
    */
   public List<Item> findItems() {
-    return this.getManager().findItems();
+    final List<Item> items = this.getManager()
+        .findItems();
+    log.info("searching in {} items", items.size());
+    return items;
   }
 
   public Set<ItemType> findItemTypes() {
