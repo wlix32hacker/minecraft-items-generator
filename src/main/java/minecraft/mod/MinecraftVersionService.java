@@ -21,11 +21,6 @@ public class MinecraftVersionService {
     this.resourceService = resourceService;
   }
 
-  public VersionDefs findMinecraftVersion(){
-    throw new UnsupportedOperationException();
-  }
-
-
   @SneakyThrows
   public GameVersion getGameVersion(){
     return this.objectMapper.readValue(

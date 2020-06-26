@@ -5,19 +5,21 @@ import javax.inject.Singleton;
 
 import com.mageddo.ramspiderjava.ClassInstanceService;
 
+import minecraft.mod.classmapping.ClassMappingsService;
+
 @Singleton
 public class MinecraftItemManagerFactory {
 
   private final ClassInstanceService classInstanceService;
-  private final MinecraftVersionService minecraftVersionService;
+  private final ClassMappingsService classMappingsService;
 
   @Inject
   public MinecraftItemManagerFactory(
       ClassInstanceService classInstanceService,
-      MinecraftVersionService minecraftVersionService
+      ClassMappingsService classMappingsService
   ) {
     this.classInstanceService = classInstanceService;
-    this.minecraftVersionService = minecraftVersionService;
+    this.classMappingsService = classMappingsService;
   }
 
   public MinecraftItemManager getInstance(VersionDefs version){
@@ -25,6 +27,6 @@ public class MinecraftItemManagerFactory {
   }
 
   public MinecraftItemManager getInstance(){
-    return this.getInstance(this.minecraftVersionService.findMinecraftVersion());
+    return this.getInstance(this.classMappingsService.findVersionDefs());
   }
 }
