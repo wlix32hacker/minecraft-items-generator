@@ -57,7 +57,20 @@ variableObfuscatedName
   ;
 
 methodDef
-  : nameSpace ' ' NAME '(' methodDefArgs ')' ' -> ' nameSpace
+  : (methodDefSourceLine)? nameSpace ' ' methodDefName '(' methodDefArgs ')' ' -> ' methodDefObfuscatedName
+  ;
+
+methodDefSourceLine
+  : INTEGER ':' INTEGER ':'
+  ;
+
+methodDefObfuscatedName
+  : methodDefName
+  ;
+
+methodDefName
+  : NAME
+  | '<' NAME '>'
   ;
 
 methodDefArgs
@@ -72,11 +85,13 @@ nameSpace
   : NAME ('.' NAME)*
   ;
 
-
 NAME
   : [A-Za-z_$][a-zA-Z0-9_$]*
   ;
 
+INTEGER
+  : [0-9]+
+  ;
 
 SINGLE_LINE_COMMENT
    : '#' (LINE_TEXT)+

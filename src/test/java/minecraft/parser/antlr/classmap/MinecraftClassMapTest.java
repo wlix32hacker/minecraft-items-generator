@@ -32,8 +32,23 @@ public class MinecraftClassMapTest {
     );
 
     // assert
+    assertEquals(1, fields.size());
     assertEquals("[# some comment]", comments.toString());
     assertEquals("net.minecraft.world.item.ItemStack:ben(tag:g)", fields.get(0));
+
+    assertEquals(3, methods.size());
+    assertEquals(
+        "call(net.minecraft.world.item.ItemStack,net.minecraft.world.level.Level,net.minecraft.world.entity.LivingEntity):call",
+        methods.get(0)
+    );
+    assertEquals(
+        "byId(int):b",
+        methods.get(1)
+    );
+    assertEquals(
+        "<init>(net.minecraft.world.level.ItemLike,int):<init>",
+        methods.get(2)
+    );
   }
 
   @Test
@@ -49,6 +64,7 @@ public class MinecraftClassMapTest {
 
     // assert
     assertEquals("[# some comment]", comments.toString());
+    assertEquals(3, fields.size());
     assertEquals("net.minecraft.world.item.ItemPropertyFunction:bem(name:a)", fields.get(0));
     assertEquals("net.minecraft.world.item.ItemStack:ben(count:d)", fields.get(1));
     assertEquals("net.minecraft.world.item.ItemStack:ben(item:f)", fields.get(2));

@@ -46,4 +46,19 @@ class ClassAndFieldsAndMethodsListener extends MinecraftClassMapBaseListener {
     fields.add(variable);
     System.out.println("    variable: " + variable);
   }
+
+  @Override
+  public void enterMethodDef(MinecraftClassMapParser.MethodDefContext ctx) {
+    final String signature = String.format(
+        "%s(%s):%s",
+        ctx.methodDefName()
+            .getText(),
+        ctx.methodDefArgs()
+            .getText(),
+        ctx.methodDefObfuscatedName()
+            .getText()
+    );
+    System.out.println("methodDef: " + signature);
+    this.methods.add(signature);
+  }
 }
