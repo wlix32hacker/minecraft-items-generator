@@ -56,6 +56,12 @@ jar {
   }
 }
 
+processResources {
+  filesMatching('application.properties') {
+    expand(project.properties)
+  }
+}
+
 shadowJar {
   mergeServiceFiles()
 }
