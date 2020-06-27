@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.util.Comparator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -46,8 +48,10 @@ public class MinecraftMod {
   private JLabel minecraftVersionLbl;
   private JLabel aboutLbl;
   private Minecraft minecraft;
+  private ExecutorService workers;
 
   public MinecraftMod() {
+    this.workers = Executors.newFixedThreadPool(3);
     this.findAndChangeButton.addActionListener(e -> {
       this.changeItemType();
     });
@@ -83,6 +87,7 @@ public class MinecraftMod {
       frame.pack();
       frame.setResizable(false);
       frame.setVisible(true);
+      this.messagesLbl.setText("");
     });
   }
 
@@ -114,7 +119,7 @@ public class MinecraftMod {
       if (this.minecraft == null) {
         throw new IllegalArgumentException("Find Minecraft process id first");
       }
-      this.minecraft
+      final int changed = this.minecraft
           .minecraftItemScanner()
           .findAndChange(
               this.getCurrentItemType(),
@@ -122,10 +127,22 @@ public class MinecraftMod {
               this.getNewItemType(),
               this.getNewQuantity()
           );
+      this.showFooterMessage(String.format("%d items changed", changed));
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
     }
+  }
+
+  void showFooterMessage(String msg) {
+    this.messagesLbl.setText(msg);
+    this.workers.submit(() -> {
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+      }
+      this.messagesLbl.setText("");
+    });
   }
 
   ItemType getNewItemType() {
@@ -356,7 +373,8 @@ public class MinecraftMod {
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
     ));
     messagesLbl = new JLabel();
-    messagesLbl.setText("");
+    messagesLbl.setForeground(new Color(-15654847));
+    messagesLbl.setText("some default text");
     panel7.add(messagesLbl, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
