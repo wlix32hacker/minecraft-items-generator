@@ -88,4 +88,15 @@ public class MinecraftItemScanner {
   MinecraftItemManager getManager() {
     return this.itemManagerFactory.getInstance();
   }
+
+  public void changeXp(int currentXp, int xpTo) {
+    this.getManager()
+        .findPlayers()
+        .stream()
+        .forEach(it -> {
+          if(it.getXp() == currentXp){
+            this.getManager().changeXP(it, xpTo);
+          }
+        });
+  }
 }

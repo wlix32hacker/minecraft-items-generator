@@ -10,9 +10,11 @@ import javax.inject.Singleton;
 import com.mageddo.ramspiderjava.ClassInstanceService;
 import com.mageddo.ramspiderjava.InstanceValue;
 
+import lombok.extern.slf4j.Slf4j;
 import minecraft.mod.clientinfo.PlayerDef;
 import minecraft.mod.clientinfo.VersionDefs;
 
+@Slf4j
 @Singleton
 public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
 
@@ -71,6 +73,7 @@ public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
   public void changeXP(Player player, int xp) {
     final PlayerDef playerDef = this.playerDef();
     this.classInstanceService.setFieldValue(player.id(), playerDef.getXp(), InstanceValue.of(xp));
+    log.info("from={}, to={}", player.getXp(), xp);
   }
 
   @Override

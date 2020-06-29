@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,12 +26,6 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
-import com.mageddo.ramspiderjava.ClassId;
-import com.mageddo.ramspiderjava.ClassInstanceService;
-
-import com.mageddo.ramspiderjava.FieldId;
-import com.mageddo.ramspiderjava.InstanceValue;
-
 import org.apache.commons.lang3.Validate;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,26 +42,29 @@ public class MinecraftMod {
   private JComboBox targetItemTypeSlc;
   private JComboBox sourceItemTypeSlc;
   private JTextField sourceQtdIpt;
-  private JButton findAndChangeButton;
-  private JButton findProcessButton;
+  private JButton findAndChangeBtn;
+  private JButton findProcessBtn;
   private JLabel foundPid;
   private JLabel messagesLbl;
   private JLabel minecraftVersionLbl;
   private JLabel aboutLbl;
   private JTabbedPane tabbedPane1;
-  private JTextField textField1;
-  private JTextField textField2;
+  private JTextField xpFromIpt;
+  private JTextField xpToIpt;
   private JButton changeXpBtn;
   private Minecraft minecraft;
   private ExecutorService workers;
 
   public MinecraftMod() {
     this.workers = Executors.newFixedThreadPool(3);
-    this.findAndChangeButton.addActionListener(e -> {
+    this.findAndChangeBtn.addActionListener(e -> {
       this.changeItemType();
     });
-    this.findProcessButton.addActionListener(e -> {
+    this.findProcessBtn.addActionListener(e -> {
       this.selectMinecraftProcess();
+    });
+    this.changeXpBtn.addActionListener(e -> {
+      this.changeXp();
     });
     new AboutPane(this.panel, this.aboutLbl);
   }
@@ -118,35 +114,8 @@ public class MinecraftMod {
               .getName()
       );
       this.setItemTypes();
-      this.findAndChangeButton.setEnabled(true);
-
-      final ClassInstanceService classInstanceService = this.minecraft.classInstanceService();
-
-      {
-        final List<InstanceValue> instances = classInstanceService.scanAndGetValues(ClassId.of("ebf"));
-        instances.forEach(it -> {
-          System.out.println(it);
-          System.out.println(classInstanceService.getFieldValue(it.getId(), FieldId.of("bK")));
-          System.out.println(classInstanceService.getFieldValue(it.getId(), FieldId.of("cn")));
-          System.out.println();
-        });
-      }
-      System.out.println("======================");
-      final List<InstanceValue> instances = classInstanceService.scanAndGetValues(ClassId.of("ze"));
-      System.out.printf("%d\n", instances.size());
-      instances.forEach(it -> {
-        final InstanceValue xp = classInstanceService.getFieldValue(it.getId(), FieldId.of("bK"));
-        System.out.println(it);
-        System.out.println(xp);
-
-        System.out.println();
-        if (xp.getValue().equals("238")) {
-          System.out.println("changing to 555");
-          classInstanceService.setFieldValue(it.getId(), FieldId.of("bK"), InstanceValue.of(555));
-        }
-      });
-
-      log.warn("minecraft version");
+      this.findAndChangeBtn.setEnabled(true);
+      this.changeXpBtn.setEnabled(true);
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
@@ -168,7 +137,22 @@ public class MinecraftMod {
           );
       this.showFooterMessage(String.format("%d items changed", changed));
     } catch (Exception e) {
-      log.warn("", e);
+      log.warn(e.getMessage());
+      this.showAlert(e.getMessage());
+    }
+  }
+
+  void changeXp() {
+    try {
+      final int currentXp = this.getCurrentXp();
+      final int xpTo = this.getXpTo();
+      this.minecraft
+          .minecraftItemScanner()
+          .changeXp(currentXp, xpTo)
+      ;
+      this.showFooterMessage(String.format("Changed xp from %d to %d", currentXp, xpTo));
+    } catch (Exception e) {
+      log.warn(e.getMessage());
       this.showAlert(e.getMessage());
     }
   }
@@ -208,6 +192,22 @@ public class MinecraftMod {
   ItemType getCurrentItemType() {
     Validate.isTrue(this.sourceItemTypeSlc.getSelectedIndex() != -1, "Select an item type");
     return ((ItemTypeComboItem) this.sourceItemTypeSlc.getSelectedItem()).getItemType();
+  }
+
+  int getXpTo() {
+    try {
+      return Integer.parseInt(this.xpToIpt.getText());
+    } catch (Exception e) {
+      throw new RuntimeException("Pass valid xp at 'to' field", e);
+    }
+  }
+
+  int getCurrentXp() {
+    try {
+      return Integer.parseInt(this.xpFromIpt.getText());
+    } catch (Exception e) {
+      throw new RuntimeException("Pass valid xp at 'from' field", e);
+    }
   }
 
   void setItemTypes() {
@@ -269,7 +269,7 @@ public class MinecraftMod {
         null, 0, false
     ));
     final JPanel panel2 = new JPanel();
-    panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 10, 10, 10), -1, -1));
+    panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 5, 10, 5), -1, -1));
     tabbedPane1.addTab("Items", panel2);
     final JPanel panel3 = new JPanel();
     panel3.setLayout(new GridLayoutManager(2, 3, new Insets(10, 5, 10, 5), -1, -1));
@@ -350,13 +350,13 @@ public class MinecraftMod {
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
     ));
-    findAndChangeButton = new JButton();
-    findAndChangeButton.setBackground(new Color(-15654847));
-    findAndChangeButton.setBorderPainted(true);
-    findAndChangeButton.setEnabled(false);
-    findAndChangeButton.setForeground(new Color(-65538));
-    findAndChangeButton.setText("find and change");
-    panel5.add(findAndChangeButton,
+    findAndChangeBtn = new JButton();
+    findAndChangeBtn.setBackground(new Color(-15654847));
+    findAndChangeBtn.setBorderPainted(true);
+    findAndChangeBtn.setEnabled(false);
+    findAndChangeBtn.setForeground(new Color(-65538));
+    findAndChangeBtn.setText("find and change");
+    panel5.add(findAndChangeBtn,
         new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
@@ -367,10 +367,10 @@ public class MinecraftMod {
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
     ));
     final JPanel panel6 = new JPanel();
-    panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 10, 10), -1, -1));
+    panel6.setLayout(new GridLayoutManager(2, 1, new Insets(0, 5, 10, 5), -1, -1));
     tabbedPane1.addTab("Player", panel6);
     final JPanel panel7 = new JPanel();
-    panel7.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
+    panel7.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 5, 0), -1, -1));
     panel6.add(panel7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
@@ -378,17 +378,13 @@ public class MinecraftMod {
     panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "XP",
         TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null
     ));
-    textField1 = new JTextField();
-    panel7.add(textField1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+    xpFromIpt = new JTextField();
+    panel7.add(xpFromIpt, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
         new Dimension(150, -1), null, 0, false
     ));
-    final Spacer spacer2 = new Spacer();
-    panel7.add(spacer2, new GridConstraints(2, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
-        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false
-    ));
-    textField2 = new JTextField();
-    panel7.add(textField2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+    xpToIpt = new JTextField();
+    panel7.add(xpToIpt, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
         new Dimension(150, -1), null, 0, false
     ));
@@ -413,8 +409,8 @@ public class MinecraftMod {
             GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
         )
     );
-    final Spacer spacer3 = new Spacer();
-    panel7.add(spacer3, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+    final Spacer spacer2 = new Spacer();
+    panel6.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
         GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false
     ));
     final JPanel panel8 = new JPanel();
@@ -437,11 +433,11 @@ public class MinecraftMod {
             false
         )
     );
-    findProcessButton = new JButton();
-    findProcessButton.setBackground(new Color(-15654847));
-    findProcessButton.setForeground(new Color(-65538));
-    findProcessButton.setText("find process");
-    panel9.add(findProcessButton,
+    findProcessBtn = new JButton();
+    findProcessBtn.setBackground(new Color(-15654847));
+    findProcessBtn.setForeground(new Color(-65538));
+    findProcessBtn.setText("find process");
+    panel9.add(findProcessBtn,
         new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(125, -1), 0, false
@@ -459,14 +455,14 @@ public class MinecraftMod {
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, new Dimension(-1, 15),
         0, false
     ));
-    final Spacer spacer4 = new Spacer();
-    panel10.add(spacer4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+    final Spacer spacer3 = new Spacer();
+    panel10.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
     ));
     aboutLbl = new JLabel();
     aboutLbl.setText("about");
     panel10.add(aboutLbl, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 15), null, null, 0, false
     ));
   }
 
