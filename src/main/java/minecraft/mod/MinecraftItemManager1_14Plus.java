@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import com.mageddo.ramspiderjava.ClassInstanceService;
 import com.mageddo.ramspiderjava.InstanceValue;
 
+import minecraft.mod.clientinfo.PlayerDef;
 import minecraft.mod.clientinfo.VersionDefs;
 
 @Singleton
@@ -64,5 +65,28 @@ public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
         this.version.getItemDef().getItemTypeField(),
         InstanceValue.of(itemType.getInstance().getId())
     );
+  }
+
+  @Override
+  public void changeXP(Player player, int xp) {
+    final PlayerDef playerDef = this.playerDef();
+    this.classInstanceService.setFieldValue(player.id(), playerDef.getXp(), InstanceValue.of(xp));
+  }
+
+  @Override
+  public List<Player> findPlayers(){
+    final PlayerDef playerDef = this.playerDef();
+    return this.classInstanceService
+        .scanAndGetValues(playerDef.getClassId())
+        .stream()
+        .map(it -> {
+          final InstanceValue xp = this.classInstanceService.getFieldValue(it.getId(), playerDef.getXp());
+          return Player.from(it, Integer.parseInt(xp.getValue()));
+        })
+        .collect(Collectors.toList());
+  }
+
+  private PlayerDef playerDef() {
+    return PlayerDef.of(this.version.getMappingsListener());
   }
 }

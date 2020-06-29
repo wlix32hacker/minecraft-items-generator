@@ -13,4 +13,7 @@ public interface MinecraftItemManager {
 
   void changeType(Item item, ItemType itemType);
 
+  void changeXP(Player player, int xp);
+
+  List<Player> findPlayers();
 }

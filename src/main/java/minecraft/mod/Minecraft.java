@@ -2,6 +2,7 @@ package minecraft.mod;
 
 import javax.inject.Singleton;
 
+import com.mageddo.ramspiderjava.ClassInstanceService;
 import com.mageddo.ramspiderjava.client.di.RamSpiderModule;
 
 import dagger.Binds;
@@ -19,6 +20,8 @@ public interface Minecraft {
   MinecraftItemScanner minecraftItemScanner();
 
   ClassMappingsService classMappingsService();
+
+  ClassInstanceService classInstanceService();
 
   @dagger.Module
   interface Module {

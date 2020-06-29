@@ -12,7 +12,11 @@ import minecraft.mod.classmapping.FieldMapping;
 public class VersionDefs {
 
   GameVersion version;
+
+  ClassMappingsListener mappingsListener;
+
   ItemDef itemDef;
+
   ItemTypeDef itemTypeDef;
 
   public static VersionDefs of(GameVersion version, ClassMappingsListener mappingsListener) {
@@ -23,6 +27,7 @@ public class VersionDefs {
 
     return new VersionDefs(
         version,
+        mappingsListener,
         ItemDef
             .builder()
             .classId(ClassId.of(mappingsListener.toObfuscatedClassName(itemClassName)))
