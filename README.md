@@ -5,9 +5,12 @@ no loader needed
 ![](https://i.imgur.com/Ui4GTCU.png)
 
 # Features
+## Items
 * Change an existent item 
     * Quantity
     * Type (Can transform Dirt into Diamonds, for example)
+## Player
+* Change Player XP
 
 # [See the release downloads][1]
 
