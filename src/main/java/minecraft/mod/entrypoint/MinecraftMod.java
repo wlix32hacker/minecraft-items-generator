@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,6 +26,9 @@ import javax.swing.border.TitledBorder;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.mageddo.ramspiderjava.ClassId;
+
+import com.mageddo.ramspiderjava.InstanceValue;
 
 import org.apache.commons.lang3.Validate;
 
@@ -116,6 +120,29 @@ public class MinecraftMod {
       this.setItemTypes();
       this.findAndChangeBtn.setEnabled(true);
       this.changeXpBtn.setEnabled(true);
+      this.minecraft
+          .classInstanceService()
+          .scanAndGetValues(ClassId.of("bki"))
+          .forEach(it -> {
+            if (it.getValue().contains("sword")) {
+              final InstanceValue result = this.minecraft
+                  .classInstanceService()
+                  .methodInvoke(it.getId(), "B", Arrays.asList());
+              System.out.println(it.getValue() + " - " + result);
+
+              if (result.getValue().equals("63")) {
+                this.minecraft
+                    .classInstanceService()
+                    .methodInvoke(it.getId(), "c", Arrays.asList(InstanceValue.of(1)));
+              }
+            }
+//            if (it.getValue().contains("fishing")) {
+//              final InstanceValue result = this.minecraft
+//                  .classInstanceService()
+//                  .methodInvoke(it.getId(), "B", Arrays.asList());
+//              System.out.println(it.getValue() + " - " + result);
+//            }
+          });
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
