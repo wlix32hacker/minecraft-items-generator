@@ -26,9 +26,10 @@ import javax.swing.border.TitledBorder;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.mageddo.ramspiderjava.ClassId;
 
 import com.mageddo.ramspiderjava.InstanceValue;
+
+import com.mageddo.ramspiderjava.MethodId;
 
 import org.apache.commons.lang3.Validate;
 
@@ -37,6 +38,7 @@ import minecraft.mod.ItemType;
 import minecraft.mod.Minecraft;
 import minecraft.mod.MinecraftAttache;
 import minecraft.mod.ModVersion;
+import minecraft.mod.clientinfo.PlayerDef;
 
 @Slf4j
 public class MinecraftMod {
@@ -120,29 +122,80 @@ public class MinecraftMod {
       this.setItemTypes();
       this.findAndChangeBtn.setEnabled(true);
       this.changeXpBtn.setEnabled(true);
+
+
+      final PlayerDef playerDef = PlayerDef.of(this.minecraft.classMappingsService()
+          .findVersionDefs()
+          .getMappingsListener());
+
       this.minecraft
           .classInstanceService()
-          .scanAndGetValues(ClassId.of("bki"))
-          .forEach(it -> {
-            if (it.getValue().contains("sword")) {
-              final InstanceValue result = this.minecraft
-                  .classInstanceService()
-                  .methodInvoke(it.getId(), "B", Arrays.asList());
-              System.out.println(it.getValue() + " - " + result);
+          .scanAndGetValues(playerDef.getClassId())
+          .forEach(player -> {
+            final InstanceValue inventory = this.minecraft.classInstanceService()
+                .getFieldValue(player.getId(), playerDef.getInventory());
 
-              if (result.getValue().equals("63")) {
-                this.minecraft
-                    .classInstanceService()
-                    .methodInvoke(it.getId(), "c", Arrays.asList(InstanceValue.of(1)));
-              }
-            }
-//            if (it.getValue().contains("fishing")) {
-//              final InstanceValue result = this.minecraft
-//                  .classInstanceService()
-//                  .methodInvoke(it.getId(), "B", Arrays.asList());
-//              System.out.println(it.getValue() + " - " + result);
-//            }
+            final MethodId inventoryGetItem = playerDef.getInventoryDef()
+                .getGetItem();
+            final InstanceValue slot0 = this.minecraft
+                .classInstanceService()
+                .methodInvoke(
+                    inventory.getId(),
+                    inventoryGetItem.getName(),
+                    Arrays.asList(InstanceValue.of(0))
+                );
+
+            System.out.printf("inventory: %s, slot0=%s \n", inventory, slot0);
+
           });
+//          .forEach(player -> {
+//            final InstanceValue slots = this.minecraft
+//                .classInstanceService()
+//                .methodInvoke(
+//                    player.getId(),
+//                    playerDef.getGetHandSlots()
+//                        .getName(),
+//                    Arrays.asList()
+//                );
+//            System.out.println("slots: " + slots);
+//          });
+
+//      this.minecraft
+//          .classInstanceService()
+//          .scanAndGetValues(ClassId.of("bki"))
+//          .forEach(it -> {
+//            if (it.getValue().contains("fishing")) {
+////              final InstanceValue result = this.minecraft
+////                  .classInstanceService()
+////                  .methodInvoke(it.getId(), "B", Arrays.asList());
+//
+////              final InstanceValue tag = this.minecraft
+////                  .classInstanceService()
+////                  .methodInvoke(it.getId(), "o", Arrays.asList());
+////              System.out.println(it.getValue() + " - " + result);
+//              final InstanceValue tag = this.minecraft
+//                  .classInstanceService()
+//                  .getFieldValue(it.getId(), FieldId.of("i"));
+//
+//              final InstanceValue entityRepresentation = this.minecraft
+//                  .classInstanceService()
+//                  .methodInvoke(it.getId(), "A", Arrays.asList());
+//
+//              System.out.printf("type=%s, tag=%s, entity=%s\n", it.getValue(), tag.getValue(), entityRepresentation);
+//
+////              if (result.getValue().equals("63")) {
+////                this.minecraft
+////                    .classInstanceService()
+////                    .methodInvoke(it.getId(), "c", Arrays.asList(InstanceValue.of(1)));
+////              }
+//            }
+////            if (it.getValue().contains("fishing")) {
+////              final InstanceValue result = this.minecraft
+////                  .classInstanceService()
+////                  .methodInvoke(it.getId(), "B", Arrays.asList());
+////              System.out.println(it.getValue() + " - " + result);
+////            }
+//          });
     } catch (Exception e) {
       log.warn("", e);
       this.showAlert(e.getMessage());
