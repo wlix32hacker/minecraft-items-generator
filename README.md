@@ -19,3 +19,5 @@ no loader needed
 * Minecraft `1.14.4+`
 
 [1]: https://github.com/wlix32hacker/minecraft-items-generator/releases
+
+> minecraft item editor, minecraft item changer, minecraft infinity enchantment, minecraft infinity items
