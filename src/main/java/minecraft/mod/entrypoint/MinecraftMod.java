@@ -59,9 +59,10 @@ public class MinecraftMod {
   private JTextField hotBarItemQuantityIpt;
   private JTextField hotBarRepairCostIpt;
   private JComboBox playersSlc;
-  private JButton updateButton;
-  private JButton refreshMapsBtn;
+  private JButton hotBarUpdateBtn;
+  private JButton hotBarRefreshMapsBtn;
   private JComboBox hotItemTypeSlc;
+  private JButton hotBarRefreshBtn;
   private Minecraft minecraft;
   private ExecutorService workers;
 
@@ -80,13 +81,58 @@ public class MinecraftMod {
       this.findHotBarItems();
       this.findCurrentHotBarSlotItemData();
     });
-    this.refreshMapsBtn.addActionListener(e -> {
+    this.hotBarRefreshMapsBtn.addActionListener(e -> {
       this.setMaps();
     });
     this.hotItemSlotsSlc.addActionListener(e -> {
       this.findCurrentHotBarSlotItemData();
     });
+    this.hotBarUpdateBtn.addActionListener(e -> {
+      this.updateHotBarItem();
+    });
+    this.hotBarRefreshBtn.addActionListener(e -> {
+      this.findHotBarItems();
+    });
     new AboutPane(this.panel, this.aboutLbl);
+  }
+
+  void updateHotBarItem() {
+    try {
+      final Item item = this.getCurrentHotBarItem();
+      this.minecraft
+          .minecraftItemScanner()
+          .change(
+              item,
+              this.getHotBarItemType(),
+              this.getHotBarItemQuantity(),
+              this.getHotBarRepairCost()
+          )
+      ;
+      this.findHotBarItems();
+    } catch (Exception e) {
+      log.warn("", e);
+      this.showAlert(e.getMessage());
+    }
+  }
+
+  int getHotBarRepairCost() {
+    return this.parseInt("Repair cost", this.hotBarRepairCostIpt.getText());
+  }
+
+  ItemType getHotBarItemType() {
+    return ((ItemTypeComboItem) this.hotItemTypeSlc.getSelectedItem()).getItemType();
+  }
+
+  int getHotBarItemQuantity() {
+    return this.parseInt("Quantity", this.hotBarItemQuantityIpt.getText());
+  }
+
+  private int parseInt(String field, String text) {
+    try {
+      return Integer.parseInt(text);
+    } catch (NumberFormatException e) {
+      throw new RuntimeException(String.format("%s: Invalid Value (%s)", field, text), e);
+    }
   }
 
   void findCurrentHotBarSlotItemData() {
@@ -121,13 +167,15 @@ public class MinecraftMod {
       log.warn("status=no-selected-player");
       return;
     }
-    this.hotItemSlotsSlc.removeAllItems();
     final List<Item> hotBarItems = this.minecraft
         .minecraftItemScanner()
         .findHotBarItems(selectedPlayer);
+    final int lastSelectedIndex = this.hotItemSlotsSlc.getSelectedIndex();
+    this.hotItemSlotsSlc.removeAllItems();
     for (int i = 0; i < hotBarItems.size(); i++) {
       this.hotItemSlotsSlc.addItem(new HotBarComboItem(i, hotBarItems.get(i)));
     }
+    this.hotItemSlotsSlc.setSelectedIndex(Math.max(lastSelectedIndex, 0));
   }
 
   Player getSelectedPlayer() {
@@ -187,6 +235,9 @@ public class MinecraftMod {
       this.setMaps();
       this.findAndChangeBtn.setEnabled(true);
       this.changeXpBtn.setEnabled(true);
+      this.hotBarRefreshMapsBtn.setEnabled(true);
+      this.hotBarRefreshBtn.setEnabled(true);
+      this.hotBarUpdateBtn.setEnabled(true);
 
 
     } catch (Exception e) {
@@ -413,32 +464,49 @@ public class MinecraftMod {
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
     final JLabel label5 = new JLabel();
-    label5.setText("Item Slot");
+    label5.setText("Hotbar items");
     panel3.add(label5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
     final JPanel panel4 = new JPanel();
-    panel4.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+    panel4.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
     panel2.add(panel4, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
     ));
-    updateButton = new JButton();
-    updateButton.setText("update");
-    panel4.add(updateButton,
-        new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+    hotBarUpdateBtn = new JButton();
+    hotBarUpdateBtn.setBackground(new Color(-15654847));
+    hotBarUpdateBtn.setEnabled(false);
+    hotBarUpdateBtn.setForeground(new Color(-65538));
+    hotBarUpdateBtn.setText("update");
+    panel4.add(hotBarUpdateBtn,
+        new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
         )
     );
     final Spacer spacer2 = new Spacer();
-    panel4.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+    panel4.add(spacer2, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
     ));
-    refreshMapsBtn = new JButton();
-    refreshMapsBtn.setText("refresh maps");
-    panel4.add(refreshMapsBtn,
+    hotBarRefreshMapsBtn = new JButton();
+    hotBarRefreshMapsBtn.setBackground(new Color(-16153060));
+    hotBarRefreshMapsBtn.setEnabled(false);
+    hotBarRefreshMapsBtn.setForeground(new Color(-65538));
+    hotBarRefreshMapsBtn.setText("refresh maps");
+    panel4.add(hotBarRefreshMapsBtn,
         new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+        )
+    );
+    hotBarRefreshBtn = new JButton();
+    hotBarRefreshBtn.setBackground(new Color(-16153060));
+    hotBarRefreshBtn.setEnabled(false);
+    hotBarRefreshBtn.setForeground(new Color(-65538));
+    hotBarRefreshBtn.setText("refresh hotbar");
+    panel4.add(hotBarRefreshBtn,
+        new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
         )

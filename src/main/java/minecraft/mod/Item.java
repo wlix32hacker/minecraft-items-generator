@@ -11,7 +11,7 @@ import lombok.Value;
 @Builder(toBuilder = true)
 public class Item {
 
-  InstanceValue instanceValue;
+  InstanceValue value;
 
   int quantity;
 
@@ -24,7 +24,7 @@ public class Item {
     Validate.isTrue(qtdAndItemType.length == 2, "not two pieces : %s", instanceValue);
     return Item
       .builder()
-      .instanceValue(instanceValue)
+      .value(instanceValue)
       .quantity(Integer.parseInt(qtdAndItemType[0]))
       .itemType(qtdAndItemType[1])
       .build()

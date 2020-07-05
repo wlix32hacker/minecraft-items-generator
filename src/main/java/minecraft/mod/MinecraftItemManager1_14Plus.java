@@ -62,33 +62,27 @@ public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
 
   @Override
   public void changeQuantity(Item item, int quantity) {
-    if(item.getQuantity() == quantity){
-      log.info("status=already-same-quantity, item={}", item);
-      return ;
-    }
     this.classInstanceService.setFieldValue(
-        item.getInstanceValue()
+        item.getValue()
             .getId(),
         getItemDef()
             .getQuantityField(),
         InstanceValue.of(quantity)
     );
+    log.info("status=changed, from={}, to={}, item={}", item.getQuantity(), quantity, item.getValue());
   }
 
   @Override
   public void changeType(Item item, ItemType itemType) {
-    if(item.getItemType().equals(itemType.getName())){
-      log.info("status=already-same-type, item={}", item);
-      return;
-    }
     this.classInstanceService.setFieldValue(
-        item.getInstanceValue()
+        item.getValue()
             .getId(),
         getItemDef()
             .getItemTypeField(),
         InstanceValue.of(itemType.getInstance()
             .getId())
     );
+    log.info("status=type-changed, from={}, to={}, item={}", item.getItemType(), itemType, item.getValue());
   }
 
   @Override
@@ -161,6 +155,7 @@ public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
         methodId.getName(),
         Collections.singletonList(InstanceValue.of(repairCost))
     );
+    log.info("status=changed, to={}, item={}", repairCost, itemId);
   }
 
   int findRepairCost(InstanceId itemId) {
