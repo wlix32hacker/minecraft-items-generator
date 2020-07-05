@@ -56,11 +56,11 @@ public class MinecraftMod {
   private JTextField xpToIpt;
   private JButton changeXpBtn;
   private JComboBox hotItemSlotsSlc;
-  private JTextField textField2;
-  private JTextField textField3;
+  private JTextField hotBarItemQuantityIpt;
+  private JTextField hotBarRepairCostIpt;
   private JComboBox playersSlc;
   private JButton updateButton;
-  private JButton refreshMapsButton;
+  private JButton refreshMapsBtn;
   private JComboBox hotItemTypeSlc;
   private Minecraft minecraft;
   private ExecutorService workers;
@@ -78,8 +78,41 @@ public class MinecraftMod {
     });
     this.playersSlc.addActionListener(e -> {
       this.findHotBarItems();
+      this.findCurrentHotBarSlotItemData();
+    });
+    this.refreshMapsBtn.addActionListener(e -> {
+      this.setMaps();
+    });
+    this.hotItemSlotsSlc.addActionListener(e -> {
+      this.findCurrentHotBarSlotItemData();
     });
     new AboutPane(this.panel, this.aboutLbl);
+  }
+
+  void findCurrentHotBarSlotItemData() {
+    final Item item = this.getCurrentHotBarItem();
+    if (item == null) {
+      log.info("not selected item");
+      return;
+    }
+    this.hotBarChooseRightItemType(item);
+    this.hotBarItemQuantityIpt.setText(String.valueOf(item.getQuantity()));
+    this.hotBarRepairCostIpt.setText(String.valueOf(item.getRepairCost()));
+  }
+
+  void hotBarChooseRightItemType(Item item) {
+    for (int i = 0; i < this.hotItemTypeSlc.getItemCount(); i++) {
+      if (this.hotItemTypeSlc.getItemAt(i).toString().equals(item.getItemType())) {
+        this.hotItemTypeSlc.setSelectedIndex(i);
+      }
+    }
+  }
+
+  Item getCurrentHotBarItem() {
+    if (this.hotItemSlotsSlc.getSelectedIndex() < 0) {
+      return null;
+    }
+    return ((HotBarComboItem) this.hotItemSlotsSlc.getSelectedItem()).getItem();
   }
 
   void findHotBarItems() {
@@ -130,7 +163,7 @@ public class MinecraftMod {
       frame.setContentPane(this.panel);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.pack();
-      frame.setResizable(false);
+      frame.setResizable(true);
       frame.setVisible(true);
       this.messagesLbl.setText("");
     });
@@ -261,6 +294,7 @@ public class MinecraftMod {
   void setItemTypes() {
     this.sourceItemTypeSlc.removeAllItems();
     this.targetItemTypeSlc.removeAllItems();
+    this.hotItemTypeSlc.removeAllItems();
     this.minecraft
         .minecraftItemScanner()
         .findItemTypes()
@@ -330,11 +364,13 @@ public class MinecraftMod {
     panel2.add(label2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
-    textField2 = new JTextField();
-    panel2.add(textField2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
-        new Dimension(150, -1), null, 0, false
-    ));
+    hotBarItemQuantityIpt = new JTextField();
+    panel2.add(hotBarItemQuantityIpt,
+        new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+            new Dimension(150, -1), null, 0, false
+        )
+    );
     final Spacer spacer1 = new Spacer();
     panel2.add(spacer1, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
         GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false
@@ -344,11 +380,13 @@ public class MinecraftMod {
     panel2.add(label3, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
-    textField3 = new JTextField();
-    panel2.add(textField3, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
-        new Dimension(150, -1), null, 0, false
-    ));
+    hotBarRepairCostIpt = new JTextField();
+    panel2.add(hotBarRepairCostIpt,
+        new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+            new Dimension(150, -1), null, 0, false
+        )
+    );
     final JPanel panel3 = new JPanel();
     panel3.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
     panel2.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
@@ -397,9 +435,9 @@ public class MinecraftMod {
     panel4.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
     ));
-    refreshMapsButton = new JButton();
-    refreshMapsButton.setText("refresh maps");
-    panel4.add(refreshMapsButton,
+    refreshMapsBtn = new JButton();
+    refreshMapsBtn.setText("refresh maps");
+    panel4.add(refreshMapsBtn,
         new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
@@ -407,7 +445,6 @@ public class MinecraftMod {
     );
     hotItemTypeSlc = new JComboBox();
     final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
-    defaultComboBoxModel3.addElement("Diamond Sword");
     hotItemTypeSlc.setModel(defaultComboBoxModel3);
     panel2.add(hotItemTypeSlc,
         new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,

@@ -2,6 +2,7 @@ package minecraft.mod;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -112,7 +113,13 @@ public class MinecraftItemManager1_14Plus implements MinecraftItemManager {
         .collect(Collectors.toList());
 
     final Set<Player> uniquePlayers = new LinkedHashSet<>();
+    players.sort(
+        Comparator
+            .comparing(Player::getMapName)
+            .thenComparing(Player::getVersion)
+    );
     for (Player player : players) {
+      log.info("player: {}", player.getValue().getValue());
       if(uniquePlayers.contains(player)){
         uniquePlayers.remove(player);
       }
