@@ -2,17 +2,20 @@ package minecraft.mod;
 
 import com.mageddo.ramspiderjava.InstanceValue;
 
-import lombok.Builder;
-import lombok.Value;
 import org.apache.commons.lang3.Validate;
 
+import lombok.Builder;
+import lombok.Value;
+
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class Item {
 
-  InstanceValue instanceValue;
+  InstanceValue value;
 
   int quantity;
+
+  int repairCost;
 
   String itemType;
 
@@ -21,7 +24,7 @@ public class Item {
     Validate.isTrue(qtdAndItemType.length == 2, "not two pieces : %s", instanceValue);
     return Item
       .builder()
-      .instanceValue(instanceValue)
+      .value(instanceValue)
       .quantity(Integer.parseInt(qtdAndItemType[0]))
       .itemType(qtdAndItemType[1])
       .build()

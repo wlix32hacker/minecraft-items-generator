@@ -23,7 +23,7 @@ dependencies {
   implementation("com.google.dagger:dagger:${daggerVersion}")
 
   implementation("com.intellij:forms_rt:7.0.3")
-  implementation("com.mageddo.ramspider:ram-spider-java:1.0.1")
+  implementation("com.mageddo.ramspider:ram-spider-java:1.0.2")
 
   antlr("org.antlr:antlr4:4.7.2")
   implementation("org.antlr:antlr4-runtime:4.7.2")

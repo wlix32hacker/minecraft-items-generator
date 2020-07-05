@@ -1,6 +1,7 @@
 package minecraft.mod;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,15 @@ public class MinecraftItemScanner {
         .findItems();
     log.info("searching in {} items", items.size());
     return items;
+  }
+
+  public Set<Player> findPlayers(){
+    return this.getManager()
+        .findPlayers();
+  }
+
+  public List<Item> findHotBarItems(Player player){
+   return this.getManager().findHotBarItems(player);
   }
 
   public Set<ItemType> findItemTypes() {
@@ -98,5 +108,17 @@ public class MinecraftItemScanner {
             this.getManager().changeXP(it, xpTo);
           }
         });
+  }
+
+  public void change(Item item, ItemType itemType, int quantity, int repairCost) {
+    if(!Objects.equals(item.getItemType(), itemType.getName())){
+      this.changeType(item, itemType);
+    }
+    if(!Objects.equals(item.getQuantity(), quantity)){
+      this.changeQuantity(item, quantity);
+    }
+    if(!Objects.equals(item.getRepairCost(), repairCost)){
+      this.getManager().changeRepairCost(item.getValue().getId(), repairCost);
+    }
   }
 }
