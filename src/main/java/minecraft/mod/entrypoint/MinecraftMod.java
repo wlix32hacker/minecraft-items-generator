@@ -58,6 +58,10 @@ public class MinecraftMod {
   private JTextField xpFromIpt;
   private JTextField xpToIpt;
   private JButton changeXpBtn;
+  private JComboBox comboBox1;
+  private JTextField textField1;
+  private JTextField textField2;
+  private JTextField textField3;
   private Minecraft minecraft;
   private ExecutorService workers;
 
@@ -145,7 +149,7 @@ public class MinecraftMod {
                     Arrays.asList(InstanceValue.of(0))
                 );
 
-            System.out.printf("inventory: %s, slot0=%s \n", inventory, slot0);
+            System.out.printf("player=%s, inventory: %s, slot0=%s \n", player, inventory, slot0);
 
           });
 //          .forEach(player -> {
@@ -349,84 +353,175 @@ public class MinecraftMod {
         null, 0, false
     ));
     final JPanel panel2 = new JPanel();
-    panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 5, 10, 5), -1, -1));
-    tabbedPane1.addTab("Items", panel2);
-    final JPanel panel3 = new JPanel();
-    panel3.setLayout(new GridLayoutManager(2, 3, new Insets(10, 5, 10, 5), -1, -1));
-    panel2.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
-    ));
-    panel3.setBorder(
-        BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "Change Item",
-            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION,
-            this.$$$getFont$$$(null, -1, 14, panel3.getFont()), null
-        ));
+    panel2.setLayout(new GridLayoutManager(8, 1, new Insets(0, 5, 10, 5), -1, -1));
+    tabbedPane1.addTab("Hotbar", panel2);
     final JLabel label1 = new JLabel();
-    label1.setText("Item Type");
-    panel3.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    label1.setText("Type");
+    panel2.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    textField1 = new JTextField();
+    panel2.add(textField1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+        new Dimension(150, -1), null, 0, false
     ));
     final JLabel label2 = new JLabel();
     label2.setText("Quantity");
-    panel3.add(label2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    panel2.add(label2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    textField2 = new JTextField();
+    panel2.add(textField2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+        new Dimension(150, -1), null, 0, false
+    ));
+    final Spacer spacer1 = new Spacer();
+    panel2.add(spacer1, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false
+    ));
+    final JLabel label3 = new JLabel();
+    label3.setText("Repair cost");
+    panel2.add(label3, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    textField3 = new JTextField();
+    panel2.add(textField3, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+        new Dimension(150, -1), null, 0, false
+    ));
+    comboBox1 = new JComboBox();
+    final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+    defaultComboBoxModel1.addElement("0: Diamond Sword");
+    comboBox1.setModel(defaultComboBoxModel1);
+    panel2.add(comboBox1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    final JPanel panel3 = new JPanel();
+    panel3.setLayout(new GridLayoutManager(2, 1, new Insets(0, 5, 10, 5), -1, -1));
+    tabbedPane1.addTab("Player", panel3);
+    final JPanel panel4 = new JPanel();
+    panel4.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 5, 0), -1, -1));
+    panel3.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
+    ));
+    panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "XP",
+        TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null
+    ));
+    xpFromIpt = new JTextField();
+    panel4.add(xpFromIpt, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+        new Dimension(150, -1), null, 0, false
+    ));
+    xpToIpt = new JTextField();
+    panel4.add(xpToIpt, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
+        new Dimension(150, -1), null, 0, false
+    ));
+    final JLabel label4 = new JLabel();
+    label4.setText("From");
+    panel4.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    final JLabel label5 = new JLabel();
+    label5.setText("To");
+    panel4.add(label5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    changeXpBtn = new JButton();
+    changeXpBtn.setBackground(new Color(-15654847));
+    changeXpBtn.setEnabled(false);
+    changeXpBtn.setForeground(new Color(-65538));
+    changeXpBtn.setText("change");
+    panel4.add(changeXpBtn,
+        new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+        )
+    );
+    final Spacer spacer2 = new Spacer();
+    panel3.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false
+    ));
+    final JPanel panel5 = new JPanel();
+    panel5.setLayout(new GridLayoutManager(3, 1, new Insets(0, 5, 10, 5), -1, -1));
+    tabbedPane1.addTab("Items", panel5);
+    final JPanel panel6 = new JPanel();
+    panel6.setLayout(new GridLayoutManager(2, 3, new Insets(10, 5, 10, 5), -1, -1));
+    panel5.add(panel6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
+    ));
+    panel6.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "Change Item",
+            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION,
+            this.$$$getFont$$$(null, -1, 14, panel6.getFont()), null
+        ));
+    final JLabel label6 = new JLabel();
+    label6.setText("Item Type");
+    panel6.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
+    ));
+    final JLabel label7 = new JLabel();
+    label7.setText("Quantity");
+    panel6.add(label7, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
     sourceItemTypeSlc = new JComboBox();
-    final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-    sourceItemTypeSlc.setModel(defaultComboBoxModel1);
-    panel3.add(sourceItemTypeSlc,
+    final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
+    sourceItemTypeSlc.setModel(defaultComboBoxModel2);
+    panel6.add(sourceItemTypeSlc,
         new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(250, -1), null, null,
             0, false
         )
     );
     sourceQtdIpt = new JTextField();
-    panel3.add(sourceQtdIpt,
+    panel6.add(sourceQtdIpt,
         new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
             new Dimension(150, -1), null, 0, false
         )
     );
-    final JPanel panel4 = new JPanel();
-    panel4.setLayout(new GridLayoutManager(2, 3, new Insets(10, 5, 10, 5), -1, -1));
-    panel2.add(panel4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+    final JPanel panel7 = new JPanel();
+    panel7.setLayout(new GridLayoutManager(2, 3, new Insets(10, 5, 10, 5), -1, -1));
+    panel5.add(panel7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
     ));
-    panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "To",
+    panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "To",
         TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION,
-        this.$$$getFont$$$(null, -1, 14, panel4.getFont()), null
+        this.$$$getFont$$$(null, -1, 14, panel7.getFont()), null
     ));
     targetItemTypeSlc = new JComboBox();
-    final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-    targetItemTypeSlc.setModel(defaultComboBoxModel2);
-    panel4.add(targetItemTypeSlc,
+    final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
+    targetItemTypeSlc.setModel(defaultComboBoxModel3);
+    panel7.add(targetItemTypeSlc,
         new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(250, -1), null, null,
             0, false
         )
     );
     targetQtdIpt = new JTextField();
-    panel4.add(targetQtdIpt,
+    panel7.add(targetQtdIpt,
         new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 26),
             new Dimension(150, -1), null, 0, false
         )
     );
-    final JLabel label3 = new JLabel();
-    label3.setText("Quantity");
-    panel4.add(label3, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    final JLabel label8 = new JLabel();
+    label8.setText("Quantity");
+    panel7.add(label8, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
-    final JLabel label4 = new JLabel();
-    label4.setText("Item Type");
-    panel4.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    final JLabel label9 = new JLabel();
+    label9.setText("Item Type");
+    panel7.add(label9, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
     ));
-    final JPanel panel5 = new JPanel();
-    panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-    panel2.add(panel5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+    final JPanel panel8 = new JPanel();
+    panel8.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+    panel5.add(panel8, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
     ));
@@ -436,78 +531,31 @@ public class MinecraftMod {
     findAndChangeBtn.setEnabled(false);
     findAndChangeBtn.setForeground(new Color(-65538));
     findAndChangeBtn.setText("find and change");
-    panel5.add(findAndChangeBtn,
+    panel8.add(findAndChangeBtn,
         new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
         )
     );
-    final Spacer spacer1 = new Spacer();
-    panel5.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+    final Spacer spacer3 = new Spacer();
+    panel8.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
     ));
-    final JPanel panel6 = new JPanel();
-    panel6.setLayout(new GridLayoutManager(2, 1, new Insets(0, 5, 10, 5), -1, -1));
-    tabbedPane1.addTab("Player", panel6);
-    final JPanel panel7 = new JPanel();
-    panel7.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 5, 0), -1, -1));
-    panel6.add(panel7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
-    ));
-    panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4473925)), "XP",
-        TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null
-    ));
-    xpFromIpt = new JTextField();
-    panel7.add(xpFromIpt, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
-        new Dimension(150, -1), null, 0, false
-    ));
-    xpToIpt = new JTextField();
-    panel7.add(xpToIpt, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 25),
-        new Dimension(150, -1), null, 0, false
-    ));
-    final JLabel label5 = new JLabel();
-    label5.setText("From");
-    panel7.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
-    ));
-    final JLabel label6 = new JLabel();
-    label6.setText("To");
-    panel7.add(label6, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
-    ));
-    changeXpBtn = new JButton();
-    changeXpBtn.setBackground(new Color(-15654847));
-    changeXpBtn.setEnabled(false);
-    changeXpBtn.setForeground(new Color(-65538));
-    changeXpBtn.setText("change");
-    panel7.add(changeXpBtn,
-        new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-            GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false
-        )
-    );
-    final Spacer spacer2 = new Spacer();
-    panel6.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
-        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false
-    ));
-    final JPanel panel8 = new JPanel();
-    panel8.setLayout(new GridLayoutManager(2, 1, new Insets(0, 5, 0, 5), -1, -1));
-    panel.add(panel8, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
-    ));
     final JPanel panel9 = new JPanel();
-    panel9.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-    panel8.add(panel9, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+    panel9.setLayout(new GridLayoutManager(2, 1, new Insets(0, 5, 0, 5), -1, -1));
+    panel.add(panel9, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
+    ));
+    final JPanel panel10 = new JPanel();
+    panel10.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+    panel9.add(panel10, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false
     ));
     minecraftVersionLbl = new JLabel();
     minecraftVersionLbl.setText("");
-    panel9.add(minecraftVersionLbl,
+    panel10.add(minecraftVersionLbl,
         new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
             GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(200, -1), null, null, 0,
             false
@@ -517,7 +565,7 @@ public class MinecraftMod {
     findProcessBtn.setBackground(new Color(-15654847));
     findProcessBtn.setForeground(new Color(-65538));
     findProcessBtn.setText("find process");
-    panel9.add(findProcessBtn,
+    panel10.add(findProcessBtn,
         new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
             GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
             GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(125, -1), 0, false
@@ -525,23 +573,23 @@ public class MinecraftMod {
     );
     foundPid = new JLabel();
     foundPid.setText("(no process)");
-    panel9.add(foundPid, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    panel10.add(foundPid, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(80, -1), null, null, 0, false
     ));
-    final JPanel panel10 = new JPanel();
-    panel10.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-    panel8.add(panel10, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+    final JPanel panel11 = new JPanel();
+    panel11.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+    panel9.add(panel11, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, new Dimension(-1, 15),
         0, false
     ));
-    final Spacer spacer3 = new Spacer();
-    panel10.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+    final Spacer spacer4 = new Spacer();
+    panel11.add(spacer4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false
     ));
     aboutLbl = new JLabel();
     aboutLbl.setText("about");
-    panel10.add(aboutLbl, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+    panel11.add(aboutLbl, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 15), null, null, 0, false
     ));
   }
