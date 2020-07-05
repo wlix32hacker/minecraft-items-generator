@@ -212,7 +212,7 @@ public class MinecraftMod {
       frame.setContentPane(this.panel);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.pack();
-      frame.setResizable(true);
+      frame.setResizable(false);
       frame.setVisible(true);
       this.messagesLbl.setText("");
     });
