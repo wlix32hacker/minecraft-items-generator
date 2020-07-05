@@ -137,7 +137,7 @@ public class ClassMappingsListener extends MinecraftClassMapBaseListener {
     return this.classBindings.get(className);
   }
 
-  public MethodId getObfuscatedMethod(MethodId methodId) {
+  public MethodId findObfuscatedMethod(MethodId methodId) {
     return Objects.requireNonNull(this.classMethodsBindings.get(methodId), "Method not found: " + methodId);
   }
 
@@ -145,7 +145,7 @@ public class ClassMappingsListener extends MinecraftClassMapBaseListener {
     return ClassId.of(this.toObfuscatedClassName(classId.getClassName()));
   }
 
-  public FieldId getObfuscatedField(ClassId classId, FieldId fieldId) {
+  public FieldId findObfuscatedField(ClassId classId, FieldId fieldId) {
     return this.getClassFields(classId.getClassName())
         .stream()
         .filter(it -> fieldId.getName().equals(it.getName()))

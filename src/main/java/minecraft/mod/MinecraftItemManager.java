@@ -1,5 +1,7 @@
 package minecraft.mod;
 
+import com.mageddo.ramspiderjava.InstanceId;
+
 import java.util.List;
 import java.util.Set;
 
@@ -15,5 +17,9 @@ public interface MinecraftItemManager {
 
   void changeXP(Player player, int xp);
 
-  List<Player> findPlayers();
+  Set<Player> findPlayers();
+
+  List<Item> findHotBarItems(Player player);
+
+  void changeRepairCost(InstanceId itemId, int repairCost);
 }

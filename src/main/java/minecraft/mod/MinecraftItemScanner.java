@@ -30,6 +30,15 @@ public class MinecraftItemScanner {
     return items;
   }
 
+  public Set<Player> findPlayers(){
+    return this.getManager()
+        .findPlayers();
+  }
+
+  public List<Item> findHotBarItems(Player player){
+   return this.getManager().findHotBarItems(player);
+  }
+
   public Set<ItemType> findItemTypes() {
     return this.getManager().findItemTypes();
   }

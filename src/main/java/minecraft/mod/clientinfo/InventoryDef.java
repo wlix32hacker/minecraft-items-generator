@@ -21,7 +21,7 @@ public class InventoryDef {
     return InventoryDef
         .builder()
         .classId(mappingsListener.findObfuscatedClassName(INVENTORY))
-        .getItem(mappingsListener.getObfuscatedMethod(GET_ITEM))
+        .getItem(mappingsListener.findObfuscatedMethod(GET_ITEM))
         .build();
   }
 }

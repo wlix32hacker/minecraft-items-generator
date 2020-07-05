@@ -27,9 +27,9 @@ public class PlayerDef {
     return PlayerDef
         .builder()
         .classId(mappingsListener.findObfuscatedClassName(PLAYER))
-        .xp(mappingsListener.getObfuscatedField(PLAYER, XP))
-        .getHandSlots(mappingsListener.getObfuscatedMethod(GET_HANDS_SLOTS))
-        .inventory(mappingsListener.getObfuscatedField(PLAYER, INVENTORY))
+        .xp(mappingsListener.findObfuscatedField(PLAYER, XP))
+        .getHandSlots(mappingsListener.findObfuscatedMethod(GET_HANDS_SLOTS))
+        .inventory(mappingsListener.findObfuscatedField(PLAYER, INVENTORY))
         .inventoryDef(InventoryDef.of(mappingsListener))
         .build();
   }
