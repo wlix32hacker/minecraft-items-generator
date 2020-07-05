@@ -2,7 +2,7 @@
 Easiest way to generate Minecraft Items while playing on survivor,
 no loader needed
 
-![](https://i.imgur.com/Ui4GTCU.png)
+![](https://i.imgur.com/XL7w3ss.png)
 
 # Features
 ## Items
